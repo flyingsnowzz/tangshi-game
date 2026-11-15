@@ -113,6 +113,6 @@
 
     <view class="about-box">
         <text class="about-title">关于这个游戏</text>
-        <text class="about-text">按小学和初中的必背唐诗整理，分四档梯度、十种玩法，每首诗都配了一张意象小画。答错不扣分，随时可以重来。</text>
+        <text class="about-text">按小学到初中的必背古诗文整理，分唐诗、宋词、古文三条线，由浅入深排成关卡；每篇都配了一张意象小画。答错不扣分，随时可以重来。</text>
     </view>
 </view>
