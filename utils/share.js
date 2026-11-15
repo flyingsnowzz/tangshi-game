@@ -12,12 +12,36 @@
  */
 const store = require('./store.js');
 const catalog = require('./catalog.js');
+// 只为拿题型数：原文案把玩法数量写死成中文数字，加一种题型就失准。
+// question-factory 顶层只定义常量，题库是懒构建的，这里 require 不会提前算题。
+const questionFactory = require('./question-factory.js');
 
 // 微信分享卡片封面只认代码包路径 / 本地临时文件 / 网络图片，
 // 不能用内联 base64（那是给 <image> 组件绕过预览器路径问题用的）。
-const SHARE_IMAGE = '/assets/mascot/xiaoshutong.png';
+// 5:4 专用封面：微信卡片缩略图是 5:4，直接塞 1:1 的吉祥物图会被左右裁掉两边。
+const SHARE_IMAGE = '/assets/mascot/share-cover.png';
 const HOME_PATH = '/pages/index/index';
 const FALLBACK_TITLE = '古诗文闯关 · 一起背古诗文、攒星星、收诗签';
+
+const CN_DIGITS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+/** 阿拉伯数字转中文（只覆盖 1–99，玩法数不会超过这个量级） */
+function cnNum(n) {
+  if (!(n > 0) || n > 99) return String(n);
+  if (n < 10) return CN_DIGITS[n];
+  const ten = Math.floor(n / 10);
+  const one = n % 10;
+  return (ten === 1 ? '' : CN_DIGITS[ten]) + '十' + (one ? CN_DIGITS[one] : '');
+}
+
+/** 玩法数 = 题型数，从题型表取，不写死 */
+function playTypeCount() {
+  try {
+    return Object.keys(questionFactory.TYPE_NAMES).length;
+  } catch (e) {
+    return 0;
+  }
+}
 
 function routeOf(page) {
   // 真机是 page.route，部分开发工具/预览器只在 __route__ 上给
@@ -76,10 +100,13 @@ function build(page) {
     title = '背错的古诗文我都收进错题本啦，一起复习一遍吧';
   } else {
     const total = poemTotalOf();
+    const plays = playTypeCount();
+    // 中文数字后面不加空格（阿拉伯数字才需要），文案要读起来是一句话
+    const playText = plays ? (cnNum(plays) + '种玩法') : '多种玩法';
     title = cleared
       ? ('我已经闯过 ' + cleared + ' 关、背了 ' + total + ' 篇古诗文，来一起玩吧！')
       : (total
-        ? ('古诗文闯关 · ' + total + ' 篇古诗文、十五种玩法，来一起背呀')
+        ? ('古诗文闯关 · ' + total + ' 篇古诗文、' + playText + '，来一起背呀')
         : FALLBACK_TITLE);
   }
 
