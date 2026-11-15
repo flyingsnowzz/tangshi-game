@@ -22,26 +22,35 @@
         <text class="section-head-text">声音和小提示</text>
     </view>
     <view class="setting-group">
-        <view class="setting-row">
+        <view class="setting-row" data-key="bgm" bindtap="onToggle">
             <view class="setting-text">
                 <text class="setting-name">国风背景音乐</text>
                 <text class="setting-desc">进游戏时放一段轻轻的古风小曲</text>
             </view>
-            <switch checked="{{settings.bgm}}" color="#2f9e8f" data-key="bgm" bindchange="onSwitch" />
+            <!-- 不用原生 switch：宿主预览层不渲染它，开关会整块消失 -->
+            <view class="toggle {{settings.bgm ? 'toggle-on' : ''}}">
+                <view class="toggle-knob"></view>
+            </view>
         </view>
-        <view class="setting-row">
+        <view class="setting-row" data-key="sfx" bindtap="onToggle">
             <view class="setting-text">
                 <text class="setting-name">答题音效</text>
                 <text class="setting-desc">答对、答错、通关时的小提示音</text>
             </view>
-            <switch checked="{{settings.sfx}}" color="#2f9e8f" data-key="sfx" bindchange="onSwitch" />
+            <!-- 不用原生 switch：宿主预览层不渲染它，开关会整块消失 -->
+            <view class="toggle {{settings.sfx ? 'toggle-on' : ''}}">
+                <view class="toggle-knob"></view>
+            </view>
         </view>
-        <view class="setting-row">
+        <view class="setting-row" data-key="hint" bindtap="onToggle">
             <view class="setting-text">
                 <text class="setting-name">闯关提示</text>
                 <text class="setting-desc">答题页留一个「查看提示」按钮</text>
             </view>
-            <switch checked="{{settings.hint}}" color="#2f9e8f" data-key="hint" bindchange="onSwitch" />
+            <!-- 不用原生 switch：宿主预览层不渲染它，开关会整块消失 -->
+            <view class="toggle {{settings.hint ? 'toggle-on' : ''}}">
+                <view class="toggle-knob"></view>
+            </view>
         </view>
     </view>
 

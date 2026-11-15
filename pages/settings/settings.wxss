@@ -55,6 +55,48 @@
     line-height: 1.5;
 }
 
+/* ---- 开关：纯 view 画的胶囊滑块 ---- */
+/* 原先是原生 <switch>，但宿主预览层不渲染它，整块控件会消失
+   （用户反馈「音乐音效的开关都不见了，没法关掉音乐」）。改成两个 view，
+   任何渲染环境都在，且整行都能点，命中区域比原生开关大得多。 */
+.toggle {
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 96rpx;
+    height: 56rpx;
+    border-radius: 28rpx;
+    background: #e8e2d4;
+    border: 3rpx solid #d6cfbd;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.toggle-knob {
+    position: absolute;
+    top: 4rpx;
+    left: 4rpx;
+    width: 42rpx;
+    height: 42rpx;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2rpx 5rpx rgba(80, 70, 40, 0.22);
+    transition: transform 0.18s ease;
+}
+
+.toggle-on {
+    background: #2f9e8f;
+    border-color: #248276;
+}
+
+.toggle-on .toggle-knob {
+    transform: translateX(40rpx);
+}
+
+/* 行本身可点，给一点按下的反馈 */
+.setting-row:active {
+    opacity: 0.72;
+}
+
 .font-head {
     margin-top: 42rpx;
 }

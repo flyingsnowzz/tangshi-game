@@ -112,7 +112,9 @@ function defaultState() {
       fullStarCount: 0,
     },
     settings: {
-      bgm: true,
+      // 背景音乐默认关闭：不请自来地放音乐会打扰人，要听自己在设置里打开
+      // （设置页还有「听听音乐」可以随时试听，不必先开开关）
+      bgm: false,
       sfx: true,
       fontSize: 'normal',
       hint: true,
