@@ -13,14 +13,32 @@
 
 <view class="page-shell home" wx:if="{{authState === 'ready'}}">
 
-    <!-- 小书童迎宾横幅 -->
+    <!-- 小书童迎宾横幅：问候 + 三项数据，数据并进卡里，只留文字 -->
     <view class="hero">
-        <image class="hero-mascot" src="{{mascotPath}}" mode="aspectFit" />
-        <view class="hero-text">
-            <text class="hero-hi">{{greeting}}，小诗友</text>
-            <text class="hero-title">古诗文闯关</text>
-            <text class="hero-sub">中小学必背古诗文 · 玩着就会背</text>
-            <view class="hero-title-chip">{{titleName}}</view>
+        <view class="hero-main">
+            <image class="hero-mascot" src="{{mascotPath}}" mode="aspectFit" />
+            <view class="hero-text">
+                <text class="hero-hi">{{greeting}}，小诗友</text>
+                <text class="hero-title">古诗文闯关</text>
+                <text class="hero-sub">中小学必背古诗文 · 玩着就会背</text>
+                <view class="hero-title-chip">{{titleName}}</view>
+            </view>
+        </view>
+        <view class="hero-stats">
+            <view class="hero-stat">
+                <text class="hero-stat-value">{{summary.points}}</text>
+                <text class="hero-stat-label">累计积分</text>
+            </view>
+            <view class="hero-stat-sep"></view>
+            <view class="hero-stat">
+                <text class="hero-stat-value">{{summary.clearedCount}}<text class="hero-stat-slash">/{{totalLevels}}</text></text>
+                <text class="hero-stat-label">已通关</text>
+            </view>
+            <view class="hero-stat-sep"></view>
+            <view class="hero-stat">
+                <text class="hero-stat-value">{{collectedCount}}<text class="hero-stat-slash">/{{poemTotal}}</text></text>
+                <text class="hero-stat-label">诗签收藏</text>
+            </view>
         </view>
         <view class="seal seal-small hero-seal">诗</view>
     </view>
@@ -45,25 +63,6 @@
             <text class="genre-tab-count">{{tab.cleared}}/{{tab.total}} 关</text>
             <!-- 选中还有形状线索（短白条），不只靠颜色区分 -->
             <view class="genre-tab-mark {{tab.active ? 'genre-tab-mark-on' : ''}}"></view>
-        </view>
-    </view>
-
-    <!-- 概览数据：三色贴纸 -->
-    <view class="overview">
-        <view class="overview-item overview-points">
-            <text class="overview-ico">分</text>
-            <text class="overview-value">{{summary.points}}</text>
-            <text class="overview-label">累计积分</text>
-        </view>
-        <view class="overview-item overview-levels">
-            <text class="overview-ico">关</text>
-            <text class="overview-value">{{summary.clearedCount}}<text class="overview-slash">/{{totalLevels}}</text></text>
-            <text class="overview-label">已通关</text>
-        </view>
-        <view class="overview-item overview-signs">
-            <text class="overview-ico">签</text>
-            <text class="overview-value">{{collectedCount}}<text class="overview-slash">/{{poemTotal}}</text></text>
-            <text class="overview-label">诗签收藏</text>
         </view>
     </view>
 

@@ -3,17 +3,23 @@
     padding-top: 24rpx;
 }
 
-/* ---- 小书童迎宾横幅 ---- */
+/* ---- 小书童迎宾横幅（问候 + 三项数据） ---- */
 .hero {
     position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     box-sizing: border-box;
-    padding: 24rpx 26rpx;
+    padding: 24rpx 26rpx 20rpx;
     background: #fff3dc;
     border: 3rpx solid #f0c46a;
     border-radius: 32rpx;
     box-shadow: 0 8rpx 0 #f6dfa9, 0 16rpx 30rpx rgba(190, 140, 40, 0.1);
+}
+
+/* 迎宾行：书童 + 欢迎语，横排 */
+.hero-main {
+    display: flex;
+    align-items: center;
 }
 
 .hero-mascot {
@@ -70,6 +76,49 @@
     position: absolute;
     top: -14rpx;
     right: -10rpx;
+}
+
+/* 积分 / 通关 / 收藏：并进迎宾卡，只留文字，不再单起一行三色贴纸卡，
+   首屏因此能直接看到「接着闯」 */
+.hero-stats {
+    display: flex;
+    align-items: center;
+    margin-top: 18rpx;
+    padding-top: 16rpx;
+    border-top: 2rpx dashed #e8c887;
+}
+
+.hero-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-stat-value {
+    font-size: 32rpx;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #2b3a35;
+}
+
+.hero-stat-slash {
+    font-size: 21rpx;
+    font-weight: 600;
+    color: #9aa39b;
+}
+
+.hero-stat-label {
+    margin-top: 2rpx;
+    font-size: 21rpx;
+    letter-spacing: 1rpx;
+    color: #8a7b5c;
+}
+
+.hero-stat-sep {
+    width: 2rpx;
+    height: 34rpx;
+    background: #ecd6a6;
 }
 
 /* ---- 每日鼓励语气泡 ---- */
@@ -176,82 +225,6 @@
 .genre-tab-mark-on {
     width: 46rpx;
     background: #ffffff;
-}
-
-/* 概览：三色贴纸 */
-.overview {
-    display: flex;
-    gap: 16rpx;
-    margin-top: 28rpx;
-}
-
-.overview-item {
-    flex: 1;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24rpx 8rpx 22rpx;
-    border: 3rpx solid;
-    border-radius: 26rpx;
-}
-
-.overview-points {
-    background: #fff0e2;
-    border-color: #f6c99a;
-    box-shadow: 0 7rpx 0 #f6d9bd;
-}
-
-.overview-levels {
-    background: #e2f5ef;
-    border-color: #8fd3c4;
-    box-shadow: 0 7rpx 0 #c6ecdf;
-}
-
-.overview-signs {
-    background: #fff6d8;
-    border-color: #f0d79a;
-    box-shadow: 0 7rpx 0 #f7e8bd;
-}
-
-.overview-ico {
-    width: 46rpx;
-    height: 46rpx;
-    line-height: 46rpx;
-    text-align: center;
-    font-size: 24rpx;
-    font-weight: 800;
-    color: #ffffff;
-    background: #f5a340;
-    border-radius: 50%;
-    margin-bottom: 10rpx;
-}
-
-.overview-levels .overview-ico {
-    background: #2f9e8f;
-}
-
-.overview-signs .overview-ico {
-    background: #e2604f;
-}
-
-.overview-value {
-    font-size: 38rpx;
-    font-weight: 800;
-    color: #2b3a35;
-    line-height: 1.2;
-}
-
-.overview-slash {
-    font-size: 24rpx;
-    font-weight: 600;
-    color: #9aa39b;
-}
-
-.overview-label {
-    margin-top: 8rpx;
-    font-size: 21rpx;
-    color: #7d857c;
 }
 
 /* ---- 继续闯关：竹青主色大卡 ---- */
