@@ -14,8 +14,10 @@
  */
 const { getSettings } = require('./store.js');
 const { bgm: bgmConfig } = require('./audio-config.js');
+const bgmData = require('./bgm-data.js');
 
 const AUDIO_DIR = '/assets/audio/';
+const BGM_LOCAL = AUDIO_DIR + 'bgm.mp3';
 
 let sfxCtx = null;
 let bgmCtx = null;
@@ -129,25 +131,75 @@ function webBgmSynthStart() {
 }
 
 /**
- * 预览器背景音：优先用浏览器原生 <audio> 直接播远程真实 MP3；
- * 没有 remoteUrl 或播放失败时，退回合成音（保证开关在预览里仍有反馈）。
+ * 预览器背景音乐：必须是**真实乐曲**，不能再合成。
+ *
+ * 优先级：remoteUrl（部署后配 CDN）→ 内联真实钢琴曲（bgm-data.js）→ 合成音兜底。
+ * 之前只有 remoteUrl 与合成音两条路，remoteUrl 没配时就整段变成 900ms 一声的
+ * 「嘀」音，听起来完全是音效而不是音乐——这次把真实钢琴曲内联进来治本。
+ *
+ * 注意区分两种失败：
+ *  - 加载失败（onerror，域名没配/404/跨域）→ 换下一个音频源，最后才是合成音；
+ *  - 自动播放被浏览器拦截（play() 返回 rejected）→ **不能**退化成合成音，
+ *    否则用户第一次听到的还是提示音。这里挂一次性手势监听，等用户一碰屏幕就续播。
  */
-function webBgmStart() {
-  if (webAudioCtx() && bgmConfig && bgmConfig.remoteUrl && typeof Audio !== 'undefined') {
+let gestureBound = false;
+
+function bindGestureRetry() {
+  if (gestureBound) return;
+  const doc = (typeof document !== 'undefined') ? document : null;
+  if (!doc || typeof doc.addEventListener !== 'function') return;
+  gestureBound = true;
+  const kick = function () {
     try {
-      webAudioEl = new Audio(bgmConfig.remoteUrl);
-      webAudioEl.loop = true;
-      webAudioEl.volume = 0.45;
-      webAudioEl.onerror = function () { webAudioEl = null; webBgmSynthStart(); };
-      const pr = webAudioEl.play();
-      if (pr && typeof pr.catch === 'function') {
-        pr.catch(function () { webAudioEl = null; webBgmSynthStart(); });
-      }
-      return true;
-    } catch (e) {
-      webAudioEl = null;
+      doc.removeEventListener('touchstart', kick, true);
+      doc.removeEventListener('click', kick, true);
+    } catch (e) { /* ignore */ }
+    gestureBound = false;
+    if (!bgmActive) return;
+    webAudioCtx();
+    if (webAudioEl) {
+      try {
+        const p = webAudioEl.play();
+        if (p && typeof p.catch === 'function') p.catch(function () { /* 仍被拦就等下一次手势 */ });
+      } catch (e) { /* ignore */ }
     }
+  };
+  try {
+    doc.addEventListener('touchstart', kick, true);
+    doc.addEventListener('click', kick, true);
+  } catch (e) {
+    gestureBound = false;
   }
+}
+
+function webBgmPlay(src, isRemote) {
+  if (!src || typeof Audio === 'undefined') return false;
+  try {
+    webAudioEl = new Audio(src);
+    webAudioEl.loop = true;
+    webAudioEl.volume = isRemote ? 0.45 : 0.5;
+    webAudioEl.onerror = function () {
+      webAudioEl = null;
+      // 远程地址失败（域名没配/404/跨域）→ 换内联真实音频；内联也失败才用合成音
+      if (isRemote && bgmData && bgmData.dataUri) { webBgmPlay(bgmData.dataUri, false); return; }
+      webBgmSynthStart();
+    };
+    const pr = webAudioEl.play();
+    if (pr && typeof pr.catch === 'function') {
+      // 自动播放被拦：保住真音频，等用户下一次触摸再续播，绝不换成合成音
+      pr.catch(function () { bindGestureRetry(); });
+    }
+    return true;
+  } catch (e) {
+    webAudioEl = null;
+    return false;
+  }
+}
+
+function webBgmStart() {
+  if (!webAudioCtx()) return false;
+  if (bgmConfig && bgmConfig.remoteUrl && webBgmPlay(bgmConfig.remoteUrl, true)) return true;
+  if (bgmData && bgmData.dataUri && webBgmPlay(bgmData.dataUri, false)) return true;
   return webBgmSynthStart();
 }
 
@@ -187,18 +239,18 @@ function wxBgmStart() {
       bgmCtx = wx.createInnerAudioContext();
       bgmCtx.loop = true;
       bgmCtx.volume = 0.45;
-      // 远程真实音乐优先；没配或加载失败则回退包内兜底
+      // 远程真实音乐优先；没配或加载失败则回退包内同一首真实钢琴曲
       var useRemote = !!(bgmConfig && bgmConfig.remoteUrl);
-      bgmCtx.src = useRemote ? bgmConfig.remoteUrl : (AUDIO_DIR + 'bgm.wav');
+      bgmCtx.src = useRemote ? bgmConfig.remoteUrl : BGM_LOCAL;
       if (typeof bgmCtx.onError === 'function') {
         bgmCtx.onError(function () {
-          // 远程失败：仅一次回退到包内 bgm.wav，避免 onError 死循环
+          // 远程失败：仅一次回退到包内真实音频，避免 onError 死循环
           if (useRemote && bgmCtx) {
             try {
               if (typeof bgmCtx.offError === 'function') bgmCtx.offError();
               bgmCtx.loop = true;
               bgmCtx.volume = 0.45;
-              bgmCtx.src = AUDIO_DIR + 'bgm.wav';
+              bgmCtx.src = BGM_LOCAL;
               bgmCtx.play();
             } catch (e) { /* ignore */ }
           }
@@ -258,4 +310,18 @@ function syncBgm() {
   setBgm(currentSettings().bgm);
 }
 
-module.exports = { playCorrect, playWrong, playClear, setBgm, syncBgm };
+/** 设置页「听一段背景音乐」：无视开关强制重起一次，方便现场确认听到的是真乐曲 */
+function tryBgm(seconds) {
+  webBgmStop();
+  wxBgmStop();
+  bgmActive = false;
+  const started = webCtor() ? webBgmStart() : wxBgmStart();
+  bgmActive = true;
+  const limit = Number(seconds) > 0 ? Number(seconds) : 8;
+  try {
+    setTimeout(function () { setBgm(currentSettings().bgm); }, limit * 1000);
+  } catch (e) { /* ignore */ }
+  return started;
+}
+
+module.exports = { playCorrect, playWrong, playClear, setBgm, syncBgm, tryBgm };

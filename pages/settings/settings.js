@@ -1,5 +1,5 @@
 const store = require('../../utils/store.js');
-const { setBgm, playCorrect } = require('../../utils/audio.js');
+const { setBgm, playCorrect, tryBgm } = require('../../utils/audio.js');
 const { getFontSizes } = require('../../utils/theme.js');
 const { createCloudPage } = require('../../utils/cloud-page.js');
 
@@ -37,13 +37,22 @@ createCloudPage({
     this.refresh();
   },
 
-  /** 显式试听：即使预览器没有 wx 音频能力，也能听出「开」的效果 */
+  /** 显式试听音效：即使预览器没有 wx 音频能力，也能听出「开」的效果 */
   onTrySfx: function () {
     if (!store.getSettings().sfx) {
       wx.showToast({ title: '答题音效已经关啦，先打开再试听', icon: 'none' });
       return;
     }
     playCorrect();
+  },
+
+  /** 试听背景音乐：不受开关限制，先放 10 秒让人确认「这是乐曲不是提示音」 */
+  onTryBgm: function () {
+    const started = tryBgm(10);
+    wx.showToast({
+      title: started ? '正在播放背景音乐' : '这台设备暂时放不出声音',
+      icon: 'none',
+    });
   },
 
   onFont: function (event) {

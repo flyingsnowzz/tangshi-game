@@ -238,9 +238,16 @@
     line-height: 1.6;
 }
 
+.sound-try-row {
+    display: flex;
+    justify-content: center;
+    gap: 20rpx;
+    margin-top: 18rpx;
+}
+
 .sound-try {
     display: inline-block;
-    margin: 18rpx auto 0;
+    margin: 0;
     padding: 12rpx 36rpx;
     font-size: 26rpx;
     font-weight: 800;

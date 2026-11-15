@@ -48,8 +48,11 @@
     <!-- 声音设置的状态反馈：切换后立刻看得见、也听得见 -->
     <view class="sound-status">
         <text class="sound-status-line">现在：答题音效 {{settings.sfx ? '开' : '关'}} · 背景音乐 {{settings.bgm ? '开' : '关'}}</text>
-        <button class="sound-try" bindtap="onTrySfx">试听一下</button>
-        <text class="sound-status-tip">预览里用轻量合成音，微信里播放完整国风音频</text>
+        <view class="sound-try-row">
+            <button class="sound-try" bindtap="onTrySfx">试试音效</button>
+            <button class="sound-try" bindtap="onTryBgm">听听音乐</button>
+        </view>
+        <text class="sound-status-tip">背景音乐是真实的巴赫钢琴曲，预览和微信里都能听到</text>
     </view>
 
     <view class="section-head font-head">
