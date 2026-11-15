@@ -193,7 +193,9 @@
         <text class="sign-tip">收满 {{poemTotal}} 篇，就是一本属于自己的古诗文画册啦</text>
     </view>
 
-    <button class="share-btn" open-type="share" bindtap="onShareTap">叫上同学一起背诗</button>
+    <view class="share-wrap">
+        <button class="share-btn" open-type="share" bindtap="onShareTap">叫上同学一起背诗</button>
+    </view>
     <view class="share-tip">在微信里打开就能转发给同学和群里</view>
 
     <view class="home-foot">

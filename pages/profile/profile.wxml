@@ -95,7 +95,9 @@
         </view>
     </view>
 
-    <button class="share-btn" open-type="share" bindtap="onShareTap">晒晒我的称号和战绩</button>
+    <view class="share-wrap">
+        <button class="share-btn" open-type="share" bindtap="onShareTap">晒晒我的称号和战绩</button>
+    </view>
     <view class="share-tip">在微信里打开就能转发给同学</view>
 
     <view class="profile-reset" bindtap="resetAll">重置全部闯关进度</view>

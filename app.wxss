@@ -475,12 +475,24 @@ button::after {
 }
 
 /* ---- 转发给同学的显式入口（所有页面通用） ---- */
+/* 外层 flex 兜住居中：宿主预览层对 <button> 的宽度处理与微信不一致，
+   通栏时文字一旦不居中就整条偏在一边；改成内容宽度 + 外层居中，
+   两种渲染下都能落在正中。 */
+.share-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 26rpx;
+}
+
 .share-btn {
     display: block;
     box-sizing: border-box;
-    width: 100%;
-    margin: 26rpx 0 0;
-    padding: 20rpx 24rpx;
+    /* 不写 width:100%：宁可窄一点也不通栏，居中才看得出是「一个按钮」 */
+    width: auto;
+    max-width: 100%;
+    min-width: 400rpx;
+    margin: 0;
+    padding: 20rpx 44rpx;
     font-size: 28rpx;
     font-weight: 800;
     line-height: 1.4;

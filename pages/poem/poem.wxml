@@ -87,7 +87,9 @@
         <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{authorIntro}}</text>
     </view>
 
-    <button class="share-btn" open-type="share" bindtap="onShareTap">把它发给同学</button>
+    <view class="share-wrap">
+        <button class="share-btn" open-type="share" bindtap="onShareTap">把它发给同学</button>
+    </view>
     <view class="share-tip">转发卡片会带上标题和作者，点开就能读全文</view>
 
     <!-- 上一篇 / 下一篇：考试之余可以一篇一篇往下读 -->

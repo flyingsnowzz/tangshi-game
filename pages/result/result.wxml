@@ -95,7 +95,9 @@
         <button class="btn-primary" wx:else bindtap="goHome">返回闯关中心</button>
     </view>
 
-    <button class="share-btn" open-type="share" bindtap="onShareTap">把这次成绩晒给同学</button>
+    <view class="share-wrap">
+        <button class="share-btn" open-type="share" bindtap="onShareTap">把这次成绩晒给同学</button>
+    </view>
     <view class="share-tip">在微信里打开就能转发；内置预览里点不动是正常的</view>
 
     <view class="result-links">
