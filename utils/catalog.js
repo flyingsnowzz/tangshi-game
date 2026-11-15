@@ -41,7 +41,7 @@ function load(force) {
     }
 
     cache = {
-      poems: map.poems,
+      poems: decoratePoems(map.poems),
       authors: map.authors || {},
       levels: levelConfig.levels,
       tiers: Array.isArray(levelConfig.tiers) ? levelConfig.tiers : [],
@@ -56,6 +56,25 @@ function load(force) {
   };
   task.then(clear, clear);
   return task;
+}
+
+/**
+ * 给每首诗派生 displayLines（正文 + 句读）。
+ *
+ * 云端 poem.lines 存白文，句读单独存 poem.marks（一行一个标点，长度等于行数）。
+ * lines 保持白文是因为出题引擎拿它做长度门槛和干扰项池；
+ * 展示用 displayLines，详情页「整首诗读一遍」直接 for 这个字段。
+ */
+function decoratePoems(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(function (p) {
+    if (!p || !Array.isArray(p.lines)) return p;
+    const marks = typeof p.marks === 'string' ? p.marks : '';
+    const displayLines = p.lines.map(function (line, i) {
+      return line + (marks.charAt(i) || '');
+    });
+    return Object.assign({}, p, { displayLines: displayLines });
+  });
 }
 
 function reset() {

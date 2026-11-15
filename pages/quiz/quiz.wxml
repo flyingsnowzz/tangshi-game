@@ -38,7 +38,7 @@
             <text class="q-image-note-text">小画暂时打不开，先想想这幅画说的是哪句诗</text>
         </view>
         <view class="q-verse" wx:if="{{current.type === 'fill' || current.type === 'wf_fill'}}">
-            <text class="q-masked" style="font-size:{{poemFs}}rpx">{{current.masked}}</text>
+            <text class="q-masked" style="font-size:{{poemFs}}rpx">{{current.displayMasked}}</text>
         </view>
         <view class="q-verse" wx:elif="{{current.displayVerse}}">
             <text style="font-size:{{poemFs}}rpx">{{current.displayMain}}</text>

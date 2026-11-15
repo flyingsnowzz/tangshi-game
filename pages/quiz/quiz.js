@@ -146,6 +146,8 @@ createCloudPage({
     const view = Object.assign({}, q, {
       // 填空类（含文言填空）题干用 masked，正文另作答案展示，不在此重复显示
       displayMain: q.type === 'fill' || q.type === 'wf_fill' ? '' : q.mainText,
+      // 挖空句的展示版（带句读）；老题库没有 maskedView 时退回 masked
+      displayMasked: q.maskedView || q.masked,
       displayVerse: q.type === 'next' || q.type === 'author' || q.type === 'title',
       answerText: answerText,
     });

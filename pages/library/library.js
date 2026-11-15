@@ -52,7 +52,9 @@ createCloudPage({
         author: p.author,
         form: p.form,
         grade: p.grade,
-        firstLine: Array.isArray(p.lines) && p.lines.length ? p.lines[0] : '',
+        firstLine: Array.isArray(p.displayLines) && p.displayLines.length
+          ? p.displayLines[0]
+          : (Array.isArray(p.lines) && p.lines.length ? p.lines[0] : ''),
         collected: collected.indexOf(p.id) >= 0,
       };
     });

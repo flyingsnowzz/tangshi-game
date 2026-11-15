@@ -44,7 +44,7 @@
             <text class="section-head-text">{{poem.genre === 'wen' ? '通读全文' : '把整首诗读一遍'}}</text>
         </view>
         <view class="poem-lines">
-            <text class="poem-line" wx:for="{{poem.lines}}" wx:key="*this" style="font-size:{{poemFs}}rpx">{{item}}</text>
+            <text class="poem-line" wx:for="{{poem.displayLines}}" wx:key="*this" style="font-size:{{poemFs}}rpx">{{item}}</text>
         </view>
     </view>
 

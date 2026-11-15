@@ -151,6 +151,7 @@ function baseQuestion(levelId, index, type, poem) {
     promptText: '',
     mainText: '',
     masked: '',
+    maskedView: '',
     subText: '',
     options: [],
     answerKey: '',
@@ -178,6 +179,50 @@ function pickRepresentativeLine(poem) {
   return fallback.length ? fallback[0] : poem.lines[0];
 }
 
+/* ---------------- 题干句读 ----------------
+ * 云端 poem.lines 是白文（不带标点），句读单独存在 poem.marks 里，
+ * 一行一个标点，长度严格等于 lines 长度（见 build_punct_marks.py）。
+ *
+ * 为什么不在数据层直接把标点拼进 lines：
+ *   本题库用 lines 做长度门槛（>=4 / >=5）、干扰项池、signature 去重，
+ *   行尾多一个字会让短句跨过门槛，出题分布整体偏移。
+ *
+ * 所以：只给**题干展示文本**补标点，options / answerKey / signature
+ * 一律保持白文，比较逻辑完全不受影响。
+ */
+function punctAt(poem, lineIndex) {
+  const marks = poem && poem.marks;
+  if (!marks) return '';
+  return marks.charAt(lineIndex) || '';
+}
+
+/** 整句原样匹配（正文、猜诗人、猜诗名、上下句都用这条） */
+function punctFor(poem, text) {
+  const lines = (poem && poem.lines) || [];
+  if (!text || !poem || !poem.marks) return '';
+  for (let i = 0; i < lines.length; i += 1) {
+    if (lines[i] === text) return punctAt(poem, i);
+  }
+  return '';
+}
+
+/** 挖空句匹配：把 □ 当通配符，其余字必须一一对上 */
+function punctForMasked(poem, masked) {
+  const lines = (poem && poem.lines) || [];
+  if (!masked || !poem || !poem.marks) return '';
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (line.length !== masked.length) continue;
+    let hit = true;
+    for (let j = 0; j < line.length; j += 1) {
+      const mc = masked.charAt(j);
+      if (mc !== '□' && mc !== line.charAt(j)) { hit = false; break; }
+    }
+    if (hit) return punctAt(poem, i);
+  }
+  return '';
+}
+
 /* ---------------- 原有四型 ---------------- */
 
 /** 题型一：选字填空 —— 挖去连续两字，四选一补全 */
@@ -197,8 +242,10 @@ function makeFill(poem, levelId, index) {
   const built = optionList(blank, distractors);
   q.signature = poem.id + '|fill|' + masked;
   q.promptText = '点击选字，补全这句诗';
+  // 题干补句读；masked 保持白文用于出题，展示版另存 maskedView
   q.masked = masked;
-  q.mainText = line;
+  q.maskedView = masked + punctForMasked(poem, masked);
+  q.mainText = line + punctFor(poem, line);
   q.subText = '《' + poem.title + '》 · ' + poem.author;
   q.options = built.options;
   q.answerKey = built.answerKey;
@@ -230,7 +277,7 @@ function makeNext(poem, levelId, index) {
   const built = optionList(answer, distractors);
   q.signature = poem.id + '|next|' + line;
   q.promptText = '请接出下一句';
-  q.mainText = line;
+  q.mainText = line + punctFor(poem, line);
   q.subText = '《' + poem.title + '》 · ' + poem.author;
   q.options = built.options;
   q.answerKey = built.answerKey;
@@ -378,7 +425,7 @@ function makeAuthor(poem, levelId, index) {
   const built = optionList(poem.author, distractors);
   q.signature = poem.id + '|author|' + line;
   q.promptText = '这句诗是谁写的？';
-  q.mainText = line;
+  q.mainText = line + punctFor(poem, line);
   q.subText = '四位诗人里，只有一位写过这句';
   q.options = built.options;
   q.answerKey = built.answerKey;
@@ -409,7 +456,7 @@ function makeTitle(poem, levelId, index) {
   const built = optionList(poem.title, distractors);
   q.signature = poem.id + '|title|' + line;
   q.promptText = '这句诗出自哪一首？';
-  q.mainText = line;
+  q.mainText = line + punctFor(poem, line);
   q.subText = '作者是' + poem.author;
   q.options = built.options;
   q.answerKey = built.answerKey;
