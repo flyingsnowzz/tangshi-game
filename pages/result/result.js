@@ -30,8 +30,14 @@ createCloudPage({
     const total = Number(options.total) || 0;
     const totalLevels = catalog.getTotalLevels();
     const level = catalog.getLevel(levelId);
-    const hasNext = levelId < totalLevels && store.isUnlocked(levelId + 1);
-    const nextLevel = hasNext ? catalog.getLevel(levelId + 1) : null;
+    // 「下一关」只在同一文体内串（唐诗末关不该一键跳进宋词首关），
+    // 跨文体换赛道交给首页的文体 Tab。
+    const nextLevelId = levelId + 1;
+    const candidates = catalog.getLevel(nextLevelId);
+    const genreNow = (level && level.genre) || 'shi';
+    const sameGenre = !!candidates && ((candidates.genre || 'shi') === genreNow);
+    const hasNext = sameGenre && nextLevelId <= totalLevels && store.isUnlocked(nextLevelId);
+    const nextLevel = hasNext ? candidates : null;
     const summary = store.getSummary();
 
     let message = '继续加油，星星还能攒满';

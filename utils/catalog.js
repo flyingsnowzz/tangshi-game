@@ -137,7 +137,7 @@ function getTier(key) {
 
 function getTierByIndex(index) {
   const tiers = getTiers();
-  return tiers[index] || tiers[0] || { name: '唐诗闯关' };
+  return tiers[index] || tiers[0] || { name: '古诗文闯关' };
 }
 
 /**

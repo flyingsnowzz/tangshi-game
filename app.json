@@ -10,7 +10,7 @@
     "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTitleText": "唐诗闯关",
+    "navigationBarTitleText": "古诗文闯关",
     "navigationBarBackgroundColor": "#fffaf0",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#fffaf0",

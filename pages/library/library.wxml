@@ -1,7 +1,7 @@
 <!-- 内容加载 / 异常 -->
 <view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
     <view class="cloud-emblem">诗</view>
-    <text class="cloud-title">唐诗闯关</text>
+    <text class="cloud-title">古诗文闯关</text>
     <block wx:if="{{authState === 'checking'}}">
         <text class="cloud-note">正在打开诗库…</text>
     </block>

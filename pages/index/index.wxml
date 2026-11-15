@@ -1,7 +1,7 @@
 <!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
 <view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
     <view class="cloud-emblem">诗</view>
-    <text class="cloud-title">唐诗闯关</text>
+    <text class="cloud-title">古诗文闯关</text>
     <block wx:if="{{authState === 'checking'}}">
         <text class="cloud-note">正在打开诗卷…</text>
     </block>
@@ -18,8 +18,8 @@
         <image class="hero-mascot" src="{{mascotPath}}" mode="aspectFit" />
         <view class="hero-text">
             <text class="hero-hi">{{greeting}}，小诗友</text>
-            <text class="hero-title">唐诗闯关</text>
-            <text class="hero-sub">中小学必背唐诗 · 玩着就会背</text>
+            <text class="hero-title">古诗文闯关</text>
+            <text class="hero-sub">中小学必背古诗文 · 玩着就会背</text>
             <view class="hero-title-chip">{{titleName}}</view>
         </view>
         <view class="seal seal-small hero-seal">诗</view>
@@ -29,6 +29,21 @@
     <view class="cheer-bubble">
         <text class="cheer-badge">今日加油</text>
         <text class="cheer-text">{{cheerText}}</text>
+    </view>
+
+    <!-- 文体切换：唐诗 / 宋词 / 古文 各走自己的档位与进度 -->
+    <view class="genre-tabs">
+        <view
+            class="genre-tab {{item.active ? 'genre-tab-on' : ''}}"
+            wx:for="{{genreTabs}}"
+            wx:key="key"
+            wx:for-item="tab"
+            data-genre="{{tab.key}}"
+            bindtap="onGenreTap"
+        >
+            <text class="genre-tab-name">{{tab.label}}</text>
+            <text class="genre-tab-count">{{tab.cleared}}/{{tab.total}} 关</text>
+        </view>
     </view>
 
     <!-- 概览数据：三色贴纸 -->
@@ -55,7 +70,7 @@
         <view class="next-ribbon">{{nextEyebrow}}</view>
         <view class="next-row">
             <view class="next-left">
-                <text class="next-eyebrow">{{nextLevelTier}} · 第 {{nextLevelId}} 关</text>
+                <text class="next-eyebrow">{{genreLabel}} · {{nextLevelTier}} · 第 {{nextLevelId}} 关</text>
                 <text class="next-name">{{nextLevelName}}</text>
                 <text class="next-desc">答对全部题目就能解锁下一关，答错可以马上重来</text>
             </view>
@@ -154,7 +169,7 @@
     <view class="lib-entry" bindtap="goLibrary">
         <view class="lib-entry-ico">库</view>
         <view class="lib-entry-body">
-            <text class="lib-entry-title">诗库 · {{poemTotal}} 首唐诗慢慢读</text>
+            <text class="lib-entry-title">诗库 · {{poemTotal}} 篇古诗文慢慢读</text>
             <text class="lib-entry-desc">不考试的时候，挑一首喜欢的慢慢赏</text>
         </view>
         <view class="lib-entry-go">去</view>
@@ -174,14 +189,14 @@
         <view class="progress-track sign-track">
             <view class="progress-fill sign-fill" style="width:{{collectPercent}}%"></view>
         </view>
-        <text class="sign-tip">收满 {{poemTotal}} 张，就是一本属于自己的唐诗画册啦</text>
+        <text class="sign-tip">收满 {{poemTotal}} 篇，就是一本属于自己的古诗文画册啦</text>
     </view>
 
     <button class="share-btn" open-type="share" bindtap="onShareTap">叫上同学一起背诗</button>
     <view class="share-tip">在微信里打开就能转发给同学和群里</view>
 
     <view class="home-foot">
-        <text class="foot-line">{{poemTotal}} 首唐诗 · 每首都有专属意象图</text>
+        <text class="foot-line">{{poemTotal}} 篇古诗文 · 每篇都有专属意象图</text>
         <text class="foot-line">答错不扣分，随时可以重来</text>
     </view>
 </view>

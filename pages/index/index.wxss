@@ -102,7 +102,51 @@
     line-height: 1.5;
 }
 
-/* ---- 概览：三色贴纸 ---- */
+/* ---- 文体切换：三个贴纸 Tab ---- */
+.genre-tabs {
+    display: flex;
+    gap: 14rpx;
+    margin-top: 26rpx;
+    padding: 8rpx;
+    background: #fdf1d8;
+    border: 3rpx solid #f0d79b;
+    border-radius: 30rpx;
+}
+
+.genre-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14rpx 0 12rpx;
+    border-radius: 24rpx;
+    background: transparent;
+}
+
+.genre-tab-on {
+    background: #ffffff;
+    border: 3rpx solid #f0c46a;
+    box-shadow: 0 5rpx 0 #f2dca4;
+}
+
+.genre-tab-name {
+    font-size: 30rpx;
+    font-weight: 800;
+    letter-spacing: 3rpx;
+    color: #8a7b5c;
+}
+
+.genre-tab-on .genre-tab-name {
+    color: #2b3a35;
+}
+
+.genre-tab-count {
+    margin-top: 4rpx;
+    font-size: 21rpx;
+    color: #b07820;
+}
+
+/* 概览：三色贴纸 */
 .overview {
     display: flex;
     gap: 16rpx;

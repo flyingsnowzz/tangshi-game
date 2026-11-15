@@ -8,6 +8,13 @@ const { createCloudPage } = require('../../utils/cloud-page.js');
 const MASCOT = require('../../utils/illustration-data.js').MASCOT;
 // 11 档字签：前 4 档唐诗（初/进/挑/巅），中 3 档宋词（词/苑/巅），后 4 档古文（文/典/道/宗）
 const TIER_WORDS = ['初', '进', '挑', '巅', '词', '苑', '巅', '文', '典', '道', '宗'];
+// 三个文体各自的首页 Tab；顺序即展示顺序
+const GENRE_TABS = [
+  { key: 'shi', label: '唐诗' },
+  { key: 'ci', label: '宋词' },
+  { key: 'wen', label: '古文' },
+];
+const GENRE_LABEL = { shi: '唐诗', ci: '宋词', wen: '古文' };
 
 function starParts(stars) {
   const n = stars || 0;
@@ -58,6 +65,11 @@ createCloudPage({
     greeting: '你好呀',
     cheerText: '',
     groups: [],
+    genreTabs: [],
+    activeGenre: 'shi',
+    genreLabel: '唐诗',
+    genreCleared: 0,
+    genreTotal: 0,
     summary: {},
     titleName: '',
     unlocked: 1,
@@ -86,7 +98,13 @@ createCloudPage({
     const state = store.getState();
     const total = catalog.getTotalLevels();
     const poemTotal = catalog.getPoems().length;
-    const groups = catalog.getGroupedLevels().map(function (group, index) {
+    const activeGenre = GENRE_LABEL[this.data.activeGenre] ? this.data.activeGenre : 'shi';
+    const allTiers = catalog.getTiers();
+    const progress = store.getGenreProgress(activeGenre);
+    const prevExpanded = {};
+    (this.data.groups || []).forEach(function (g) { prevExpanded[g.key] = g.expanded; });
+
+    const groups = catalog.getGroupedLevels(activeGenre).map(function (group, index) {
       const levels = group.levels.map(function (level) {
         const record = state.levels[String(level.id)] || null;
         let status = 'locked';
@@ -118,7 +136,7 @@ createCloudPage({
         subtitle: group.tier.subtitle,
         desc: group.tier.desc,
         theme: group.tier.theme,
-        badgeWord: TIER_WORDS[index] || '诗',
+        badgeWord: TIER_WORDS[allTiers.indexOf(group.tier)] || '诗',
         tierIndex: index,
         levels: levels,
         clearedCount: clearedCount,
@@ -129,26 +147,43 @@ createCloudPage({
 
     const summary = store.getSummary();
     const titleInfo = store.getTitle();
-    const nextLevelId = Math.min(state.unlocked, total);
+    // 下一关来自本文体自己的解锁链，不再用全局线性指针
+    const nextLevelId = progress.nextLevelId || 1;
     const nextLevel = catalog.getLevel(nextLevelId);
     const nextGroup = groups.find(function (g) {
       return g.levels.some(function (l) { return l.id === nextLevelId; });
     });
     const isNewPlayer = summary.clearedCount === 0;
 
-    // 40 关若四档全部平铺，首页会拉得很长。默认只展开正在闯的那一档，
-    // 用户手动展开过的档位在刷新后保持展开。
+    // 每个文体只铺自己的档位（唐诗 4 档 / 宋词 3 档 / 古文 4 档），
+    // 默认展开「正在闯」的那一档，展开状态按 tier.key 记忆，切 Tab 回来不会全塌。
     const activeTier = groups.findIndex(function (g) {
       return g.levels.some(function (l) { return l.id === nextLevelId; });
     });
-    const previous = this.data.groups || [];
     groups.forEach(function (g, index) {
-      g.expanded = index === activeTier || !!(previous[index] && previous[index].expanded);
+      g.expanded = prevExpanded[g.key] !== undefined ? prevExpanded[g.key] : index === activeTier;
       g.collapsedTip = g.expanded ? '' : ('点开看 ' + g.total + ' 关');
+    });
+
+    const genreTabs = GENRE_TABS.map(function (tab) {
+      const p = store.getGenreProgress(tab.key);
+      return {
+        key: tab.key,
+        label: tab.label,
+        cleared: p.cleared,
+        total: p.total,
+        percent: p.percent,
+        active: tab.key === activeGenre,
+      };
     });
 
     this.setData({
       groups: groups,
+      genreTabs: genreTabs,
+      activeGenre: activeGenre,
+      genreLabel: GENRE_LABEL[activeGenre],
+      genreCleared: progress.cleared,
+      genreTotal: progress.total,
       summary: summary,
       titleName: titleInfo.name,
       unlocked: state.unlocked,
@@ -156,14 +191,14 @@ createCloudPage({
       nextLevelId: nextLevelId,
       nextLevelName: nextLevel ? nextLevel.name : '',
       nextLevelTier: nextGroup ? nextGroup.name : '',
-      nextEyebrow: isNewPlayer ? '第一关' : '接着闯',
+      nextEyebrow: progress.cleared === 0 ? '第一关' : '接着闯',
       wrongCount: state.wrongBook.length,
       poemTotal: poemTotal,
       collectedCount: summary.collectedCount,
       collectPercent: poemTotal ? Math.round(summary.collectedCount * 100 / poemTotal) : 0,
-      clearedPercent: total ? Math.round(summary.clearedCount * 100 / total) : 0,
+      clearedPercent: progress.percent,
       greeting: greetingOf(),
-      cheerText: cheerOf(summary.clearedCount, total),
+      cheerText: cheerOf(progress.cleared, progress.total),
       isNewPlayer: isNewPlayer,
       today: todayPoemOf(),
       todayTriedFallback: false,
@@ -171,7 +206,17 @@ createCloudPage({
     });
   },
 
-  /** 收起 / 展开某一档，避免 40 关一次性铺满首页 */
+  /** 切换文体 Tab：唐诗 / 宋词 / 古文 各自一套档位与解锁进度 */
+  onGenreTap: function (event) {
+    const key = event.currentTarget.dataset.genre;
+    if (!GENRE_LABEL[key] || key === this.data.activeGenre) return;
+    const that = this;
+    this.setData({ activeGenre: key, groups: [] }, function () {
+      that.refresh();
+    });
+  },
+
+  /** 收起 / 展开某一档，避免一次铺满首页 */
   onTierTap: function (event) {
     const idx = Number(event.currentTarget.dataset.tier);
     const groups = this.data.groups.map(function (g, i) {

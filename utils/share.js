@@ -17,7 +17,7 @@ const catalog = require('./catalog.js');
 // 不能用内联 base64（那是给 <image> 组件绕过预览器路径问题用的）。
 const SHARE_IMAGE = '/assets/mascot/xiaoshutong.png';
 const HOME_PATH = '/pages/index/index';
-const FALLBACK_TITLE = '唐诗闯关 · 一起背唐诗、攒星星、收诗签';
+const FALLBACK_TITLE = '古诗文闯关 · 一起背古诗文、攒星星、收诗签';
 
 function routeOf(page) {
   // 真机是 page.route，部分开发工具/预览器只在 __route__ 上给
@@ -61,25 +61,25 @@ function build(page) {
     const levelId = Number(data.levelId) || 1;
     const stars = Number(data.stars) || 1;
     const levelName = data.levelName || '这一关';
-    title = '我在「唐诗闯关」第 ' + levelId + ' 关「' + levelName + '」拿了 ' + stars + ' 颗星，来比一比！';
+    title = '我在「古诗文闯关」第 ' + levelId + ' 关「' + levelName + '」拿了 ' + stars + ' 颗星，来比一比！';
   } else if (route.indexOf('pages/poem/') >= 0 && data.poem) {
-    title = '《' + data.poem.title + '》· ' + data.poem.author + ' —— 一起读读这首诗';
+    title = '《' + data.poem.title + '》· ' + data.poem.author + ' —— 一起读读这一篇';
     path = '/pages/poem/poem?poemId=' + data.poem.id;
   } else if (route.indexOf('pages/profile/') >= 0) {
     const titleName = titleNameOf();
     title = titleName
-      ? ('我是「' + titleName + '」，已经闯过 ' + cleared + ' 关唐诗，来一起玩吧！')
-      : ('唐诗闯关 · 已经闯过 ' + cleared + ' 关，来攒星星呀');
+      ? ('我是「' + titleName + '」，已经闯过 ' + cleared + ' 关古诗文，来一起玩吧！')
+      : ('古诗文闯关 · 已经闯过 ' + cleared + ' 关，来攒星星呀');
   } else if (route.indexOf('pages/quiz/') >= 0) {
-    title = '我正在闯「唐诗闯关」，来帮我接下一句！';
+    title = '我正在闯「古诗文闯关」，来帮我接下一句！';
   } else if (route.indexOf('pages/wrong/') >= 0) {
-    title = '背错的唐诗我都收进错题本啦，一起复习一遍吧';
+    title = '背错的古诗文我都收进错题本啦，一起复习一遍吧';
   } else {
     const total = poemTotalOf();
     title = cleared
-      ? ('我已经闯过 ' + cleared + ' 关、背了 ' + total + ' 首唐诗，来一起玩吧！')
+      ? ('我已经闯过 ' + cleared + ' 关、背了 ' + total + ' 篇古诗文，来一起玩吧！')
       : (total
-        ? ('唐诗闯关 · ' + total + ' 首唐诗、十种玩法，来一起背诗呀')
+        ? ('古诗文闯关 · ' + total + ' 篇古诗文、十五种玩法，来一起背呀')
         : FALLBACK_TITLE);
   }
 

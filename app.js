@@ -4,7 +4,7 @@ const store = require('./utils/store.js');
 
 App({
   globalData: {
-    appName: '唐诗闯关',
+    appName: '古诗文闯关',
   },
 
   /** 全应用共享一次会话检查，登录/退出后由 resetSession 清空 */

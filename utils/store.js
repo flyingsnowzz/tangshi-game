@@ -25,10 +25,81 @@ function totalLevels() {
   return catalog.getTotalLevels() || 40;
 }
 
+/* ---------------- 分轨（唐诗 / 宋词 / 古文）---------------- */
+
+const GENRES = ['shi', 'ci', 'wen'];
+
+/** 某个文体在关卡序列里的首关 / 末关 id，用于给解锁指针划边界 */
+function genreRange(genre) {
+  const levels = catalog.getLevels(genre) || [];
+  let first = null;
+  let last = null;
+  levels.forEach(function (lv) {
+    if (first === null || lv.id < first) first = lv.id;
+    if (last === null || lv.id > last) last = lv.id;
+  });
+  return { first: first, last: last };
+}
+
+function genreOfLevel(levelId) {
+  const lv = catalog.getLevel(levelId);
+  return (lv && lv.genre) || 'shi';
+}
+
+/**
+ * 分轨解锁指针：每个文体各自一条「解锁到第几关」，互不牵连。
+ * 旧快照只有全局 unlocked（线性指针），这里按线性假设推导各文体起点：
+ * 指针已越过某文体范围 → 该文体视为全解锁；否则默认可玩首关。
+ */
+function normalizeUnlockedBy(rawMap, legacyUnlocked) {
+  const src = (rawMap && typeof rawMap === 'object') ? rawMap : {};
+  const legacy = Math.max(1, Number(legacyUnlocked) || 1);
+  const out = {};
+  GENRES.forEach(function (g) {
+    const range = genreRange(g);
+    if (range.first === null) return;
+    let value = Number(src[g]);
+    if (!value) {
+      value = legacy >= range.first ? Math.min(legacy, range.last + 1) : range.first;
+    }
+    out[g] = Math.max(range.first, Math.min(value, range.last + 1));
+  });
+  return out;
+}
+
+/** 某文体的通关进度与「下一关」；下一关永远落在该文体自己的序列里 */
+function getGenreProgress(genre) {
+  const levels = catalog.getLevels(genre) || [];
+  const state = getState();
+  const by = (state.unlockedBy || {})[genre] || 0;
+  let cleared = 0;
+  let next = null;
+  levels.forEach(function (lv) {
+    const record = state.levels[String(lv.id)];
+    if (record && record.cleared) {
+      cleared += 1;
+      return;
+    }
+    if (next === null && by && lv.id <= by) next = lv.id;
+  });
+  if (next === null && levels.length) {
+    // 全部通关 → 回到该文体最后一关再刷一次；指针异常落后 → 回到首关兜底
+    next = cleared >= levels.length ? levels[levels.length - 1].id : levels[0].id;
+  }
+  return {
+    total: levels.length,
+    cleared: cleared,
+    percent: levels.length ? Math.round(cleared * 100 / levels.length) : 0,
+    nextLevelId: next,
+    unlockedTo: by,
+  };
+}
+
 function defaultState() {
   return {
-    version: 3,
+    version: 4,
     unlocked: 1,
+    unlockedBy: {},
     levels: {},
     wrongBook: [],
     collected: [],
@@ -60,6 +131,7 @@ function normalize(raw) {
   merged.wrongBook = Array.isArray(raw.wrongBook) ? raw.wrongBook : [];
   merged.collected = Array.isArray(raw.collected) ? raw.collected : [];
   merged.unlocked = Math.max(1, Math.min(totalLevels(), Number(raw.unlocked) || 1));
+  merged.unlockedBy = normalizeUnlockedBy(raw.unlockedBy, merged.unlocked);
   merged.version = base.version;
   return merged;
 }
@@ -155,6 +227,10 @@ function mergeState(guestRaw, cloudRaw) {
   const guest = normalize(guestRaw);
 
   out.unlocked = Math.max(out.unlocked, guest.unlocked, 1);
+  out.unlockedBy = out.unlockedBy || {};
+  Object.keys(guest.unlockedBy || {}).forEach(function (g) {
+    out.unlockedBy[g] = Math.max(out.unlockedBy[g] || 0, guest.unlockedBy[g] || 0);
+  });
 
   const keys = {};
   Object.keys(out.levels).forEach(function (k) { keys[k] = true; });
@@ -262,9 +338,12 @@ function getLevelRecord(levelId) {
 
 function isUnlocked(levelId) {
   const id = Number(levelId);
+  // 分轨后每个文体各走各的解锁链：唐诗1 / 宋词41 / 古文53 都能直接从首关起步，
+  // 不必线性打通前 52 关才有资格碰古文（否则分轨等于没上线）。
+  const genre = genreOfLevel(id);
+  const by = getState().unlockedBy || {};
+  if (by[genre]) return id <= by[genre];
   if (id <= getState().unlocked) return true;
-  // 分轨后每个文体的首关默认可玩（唐诗1 / 宋词41 / 古文53），
-  // 否则玩家要线性打通前 52 关才能碰到古文，分轨等于没上线。
   const firsts = catalog.getFirstLevelIds ? catalog.getFirstLevelIds() : [];
   return firsts.indexOf(id) >= 0;
 }
@@ -338,8 +417,19 @@ function completeLevel(result) {
       plays: (old.plays || 0) + 1,
     };
     const limit = totalLevels();
-    if (Number(result.levelId) >= state.unlocked && state.unlocked < limit) {
-      state.unlocked = Number(result.levelId) + 1;
+    const levelId = Number(result.levelId);
+    // 只推进本文体自己的解锁指针，别让唐诗的通关记录顺手把宋词/古文也开了
+    const genre = genreOfLevel(levelId);
+    const range = genreRange(genre);
+    if (!state.unlockedBy) state.unlockedBy = {};
+    const current = state.unlockedBy[genre] || range.first || 1;
+    if (levelId >= current) {
+      state.unlockedBy[genre] = range.last === null
+        ? levelId + 1
+        : Math.min(levelId + 1, range.last + 1);
+    }
+    if (levelId >= state.unlocked && state.unlocked < limit) {
+      state.unlocked = levelId + 1;
     }
     state.stats.totalAnswers += result.totalQuestions + result.wrongCount;
     state.stats.firstCorrect += result.firstCorrect;
@@ -437,7 +527,8 @@ function getSummary() {
 
 function resetAll() {
   const keepSettings = Object.assign({}, getState().settings);
-  const fresh = defaultState();
+  // 走一遍 normalize，确保分轨解锁指针按当前目录重新推导（各文体首关可玩）
+  const fresh = normalize(null);
   fresh.settings = keepSettings;
   cached = fresh;
   if (mode === 'guest') saveGuest(fresh);
@@ -460,6 +551,8 @@ module.exports = {
   setSetting,
   getLevelRecord,
   isUnlocked,
+  genreOfLevel,
+  getGenreProgress,
   recordWrong,
   removeWrong,
   clearWrong,
