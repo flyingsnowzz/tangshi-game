@@ -135,7 +135,7 @@ createCloudPage({
       return;
     }
     let answerText = '';
-    if (q.type === 'fill') {
+    if (q.type === 'fill' || q.type === 'wf_fill') {
       answerText = q.mainText;
     } else if (q.type === 'order') {
       answerText = q.orderText || '';
@@ -144,7 +144,8 @@ createCloudPage({
       answerText = correct ? correct.text : '';
     }
     const view = Object.assign({}, q, {
-      displayMain: q.type === 'fill' ? '' : q.mainText,
+      // 填空类（含文言填空）题干用 masked，正文另作答案展示，不在此重复显示
+      displayMain: q.type === 'fill' || q.type === 'wf_fill' ? '' : q.mainText,
       displayVerse: q.type === 'next' || q.type === 'author' || q.type === 'title',
       answerText: answerText,
     });

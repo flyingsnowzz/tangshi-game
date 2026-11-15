@@ -113,6 +113,19 @@ function getTotalLevels() {
   return getLevels().length;
 }
 
+/**
+ * 每个文体的首关 id 集合。分轨后唐诗(1)、宋词(41)、古文(53) 应各自可起步，
+ * 否则玩家要线性打通前 52 关才能碰到古文，等于没上线。
+ */
+function getFirstLevelIds() {
+  const first = {};
+  getLevels().forEach(function (lv) {
+    const g = lv.genre || 'shi';
+    if (first[g] === undefined || lv.id < first[g]) first[g] = lv.id;
+  });
+  return Object.keys(first).map(function (g) { return first[g]; });
+}
+
 function getLevel(id) {
   return getLevels().find(function (item) { return item.id === Number(id); }) || null;
 }
@@ -166,6 +179,7 @@ module.exports = {
   getLevels,
   getTiers,
   getTotalLevels,
+  getFirstLevelIds,
   getLevel,
   getTier,
   getTierByIndex,

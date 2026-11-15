@@ -261,7 +261,12 @@ function getLevelRecord(levelId) {
 }
 
 function isUnlocked(levelId) {
-  return Number(levelId) <= getState().unlocked;
+  const id = Number(levelId);
+  if (id <= getState().unlocked) return true;
+  // 分轨后每个文体的首关默认可玩（唐诗1 / 宋词41 / 古文53），
+  // 否则玩家要线性打通前 52 关才能碰到古文，分轨等于没上线。
+  const firsts = catalog.getFirstLevelIds ? catalog.getFirstLevelIds() : [];
+  return firsts.indexOf(id) >= 0;
 }
 
 /** 记录一道错题，按 signature 去重并累计错误次数 */

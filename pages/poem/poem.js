@@ -32,13 +32,15 @@ createCloudPage({
     const illus = catalog.getIllustration(poemId);
     const real = illus && illus.real ? illus.real : '';
     const bundled = illus ? (inlineImages.get(poemId) || illus.path) : '';
+    const src = real || bundled;
     this.setData({
       illustration: illus,
-      illusSrc: real || bundled,
+      illusSrc: src,
       // 有远程图时，加载失败先回退到包内生成图；无远程图则直接落到文字签
       illusFallback: real ? bundled : '',
       illusTriedFallback: false,
-      illusFailed: false,
+      // 古文/纯文论无实景照且无包内图：空 src 不会触发 image error，直接走文字签，避免留白
+      illusFailed: !src,
       illusReal: !!real,
       illusCredit: illus ? (illus.credit || '') : '',
     });

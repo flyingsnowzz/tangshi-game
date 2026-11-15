@@ -38,20 +38,35 @@
         <text class="poem-illus-caption">{{illustration.caption}}</text>
     </view>
 
-    <!-- 全诗 -->
+    <!-- 全诗 / 全文 -->
     <view class="poem-body">
         <view class="section-head">
-            <text class="section-head-text">把整首诗读一遍</text>
+            <text class="section-head-text">{{poem.genre === 'wen' ? '通读全文' : '把整首诗读一遍'}}</text>
         </view>
         <view class="poem-lines">
             <text class="poem-line" wx:for="{{poem.lines}}" wx:key="*this" style="font-size:{{poemFs}}rpx">{{item}}</text>
         </view>
     </view>
 
-    <!-- 白话释义 -->
+    <!-- 古文名句精读（仅古文）：展示精校的译文 / 实词 / 诵读停顿 -->
+    <view class="poem-block" wx:if="{{poem.genre === 'wen' && poem.cards && poem.cards.length}}">
+        <view class="section-head">
+            <text class="section-head-text">名句精读</text>
+        </view>
+        <view class="wen-card" wx:for="{{poem.cards}}" wx:key="text" wx:for-item="card">
+            <text class="wen-card-text" style="font-size:{{poemFs}}rpx">{{card.text}}</text>
+            <text class="wen-card-trans" style="font-size:{{bodyFs}}rpx">{{card.trans}}</text>
+            <view class="wen-word-list" wx:if="{{card.words && card.words.length}}">
+                <text class="wen-word-chip" wx:for="{{card.words}}" wx:key="w" wx:for-item="wd">{{wd.w}} · {{wd.m}}</text>
+            </view>
+            <text class="wen-card-pause" wx:if="{{card.pause}}">诵读停顿 · {{card.pause}}</text>
+        </view>
+    </view>
+
+    <!-- 白话释义 / 全文大意 -->
     <view class="poem-block">
         <view class="section-head">
-            <text class="section-head-text">这首诗在说什么</text>
+            <text class="section-head-text">{{poem.genre === 'wen' ? '全文大意' : '这首诗在说什么'}}</text>
         </view>
         <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{poem.meaning}}</text>
     </view>

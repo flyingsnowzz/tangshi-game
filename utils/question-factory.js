@@ -6,6 +6,9 @@
  * 题型分两类：
  *   单选类 fill / next / guess / image / author / title / feihua / odd —— 页面复用四选一交互
  *   操作类 match（配对）/ order（排序）—— 页面各自有独立交互分支
+ *
+ * 古文五型（genre=wen 专用，基于 cards 而非 lines，同为四选一）：
+ *   pause 诵读断句 / word 实词释义 / wf_fill 文言填空 / trans 名句翻译 / read 文意理解
  */
 const catalog = require('./catalog.js');
 const inlineImages = require('./illustration-data.js');
@@ -21,6 +24,12 @@ const TYPE_NAMES = {
   title: '猜诗名',
   feihua: '飞花令',
   odd: '火眼金睛',
+  // 古文专用五型
+  trans: '文句翻译',
+  word: '实词释义',
+  read: '文意理解',
+  wf_fill: '文言填空',
+  pause: '诵读断句',
 };
 
 const LETTERS = ['A', 'B', 'C', 'D'];
@@ -31,6 +40,7 @@ const FEIHUA_CHARS = ['月', '山', '花', '风', '春', '江', '日', '云', '�
  * 题库来自云端 catalog，必须等 load() 完成后才有值，因此这里延迟构建。
  */
 let ALL_LINES = null;
+let WEN_CARDS = null; // 古文名句卡片扁平池 [{poem, card}]，随云端刷新重建
 const FRAGMENT_CACHE = {};
 
 function allLines() {
@@ -38,6 +48,8 @@ function allLines() {
   const lines = [];
   const seen = {};
   catalog.getPoems().forEach(function (poem) {
+    // 古文（genre=wen）的 lines 只供详情页展示；文言句不能混进诗词题的干扰项池
+    if (poem.genre === 'wen') return;
     (poem.lines || []).forEach(function (line) {
       if (line.length >= 4 && !seen[line]) {
         seen[line] = true;
@@ -49,9 +61,27 @@ function allLines() {
   return lines;
 }
 
+/**
+ * 古文名句卡片扁平池：把每篇 wen 的 cards 摊平成 [{poem, card}]。
+ * 古文五型全部基于 cards（text/trans/words/pause），不依赖 lines。
+ * 只在首次出题时构建，云端题库刷新后随 resetCache 重建。
+ */
+function allWenCards() {
+  if (WEN_CARDS) return WEN_CARDS;
+  const out = [];
+  catalog.getPoems('wen').forEach(function (poem) {
+    (poem.cards || []).forEach(function (card) {
+      if (card && card.text) out.push({ poem: poem, card: card });
+    });
+  });
+  WEN_CARDS = out;
+  return out;
+}
+
 /** 云端题库刷新后清空派生缓存 */
 function resetCache() {
   ALL_LINES = null;
+  WEN_CARDS = null;
   Object.keys(FRAGMENT_CACHE).forEach(function (key) { delete FRAGMENT_CACHE[key]; });
 }
 
@@ -450,8 +480,196 @@ function makeOdd(poem, pool, levelId, index) {
   return q;
 }
 
+/* ---------------- 古文五型（genre=wen，基于 cards） ---------------- */
+
+/** 全库实词释义对，供 word / wf_fill 取干扰项 */
+function allWenWords() {
+  const pairs = [];
+  allWenCards().forEach(function (item) {
+    (item.card.words || []).forEach(function (wd) {
+      if (wd && wd.w && wd.m) pairs.push(wd);
+    });
+  });
+  return pairs;
+}
+
+/** 取与答案长度接近的干扰项，先紧后松，保证四选一质量 */
+function closeDistractors(pool, correct, n, maxDiff) {
+  const clean = unique(pool.filter(function (x) { return x && x !== correct; }));
+  let hit = clean.filter(function (x) { return Math.abs(x.length - correct.length) <= maxDiff; });
+  if (hit.length < n) {
+    hit = hit.concat(clean.filter(function (x) {
+      return Math.abs(x.length - correct.length) > maxDiff && hit.indexOf(x) < 0;
+    }));
+  }
+  return sample(hit, n);
+}
+
+/** 古文题型一：文句翻译 —— 给文言原句，四选一选正确白话译文 */
+function makeTrans(pick, levelId, index) {
+  const card = pick.card;
+  const correct = card.trans;
+  if (!correct) return null;
+  const pool = allWenCards().map(function (it) { return it.card.trans; });
+  const distractors = closeDistractors(pool, correct, 3, 6);
+  if (distractors.length < 3) return null;
+  const q = baseQuestion(levelId, index, 'trans', pick.poem);
+  const built = optionList(correct, distractors);
+  q.signature = pick.poem.id + '|trans|' + card.text;
+  q.promptText = '选出这句话的正确译文';
+  q.mainText = card.text;
+  q.subText = '《' + pick.poem.title + '》' + (pick.poem.author ? ' · ' + pick.poem.author : '');
+  q.options = built.options;
+  q.answerKey = built.answerKey;
+  q.tip = '抓住关键实词「' + ((card.words && card.words[0] && card.words[0].w) || '') + '」的意思';
+  return q;
+}
+
+/** 古文题型二：文意理解 —— 给白话译文，四选一选对应文言原句（trans 的逆操作） */
+function makeRead(pick, levelId, index) {
+  const card = pick.card;
+  const correct = card.text;
+  if (!card.trans || !correct) return null;
+  const pool = allWenCards().map(function (it) { return it.card.text; });
+  const distractors = closeDistractors(pool, correct, 3, 6);
+  if (distractors.length < 3) return null;
+  const q = baseQuestion(levelId, index, 'read', pick.poem);
+  const built = optionList(correct, distractors);
+  q.signature = pick.poem.id + '|read|' + card.trans;
+  q.promptText = '这句话说的是下面哪一句原文？';
+  q.mainText = card.trans;
+  q.subText = '读懂白话，找回原来的文言句子';
+  q.options = built.options;
+  q.answerKey = built.answerKey;
+  q.tip = '原文里有「' + correct.slice(0, 4) + '」';
+  return q;
+}
+
+/** 古文题型三：实词释义 —— 给句子与加点词，四选一选准确释义 */
+function makeWord(pick, levelId, index) {
+  const card = pick.card;
+  const words = (card.words || []).filter(function (w) { return w.w && w.m; });
+  if (!words.length) return null;
+  const word = words[randInt(words.length)];
+  const pool = allWenWords().map(function (w) { return w.m; });
+  const distractors = closeDistractors(pool, word.m, 3, 3);
+  if (distractors.length < 3) return null;
+  const q = baseQuestion(levelId, index, 'word', pick.poem);
+  const built = optionList(word.m, distractors);
+  q.signature = pick.poem.id + '|word|' + word.w;
+  q.promptText = '句中「' + word.w + '」是什么意思？';
+  q.mainText = card.text;
+  q.subText = '《' + pick.poem.title + '》 · 结合上下文想一想';
+  q.options = built.options;
+  q.answerKey = built.answerKey;
+  q.tip = '把「' + word.m + '」放回句中读一遍';
+  return q;
+}
+
+/** 古文题型四：文言填空 —— 挖去一个实词，四选一补全（挖空词必来自 words，且在原句中真实存在） */
+function makeWenFill(pick, levelId, index) {
+  const card = pick.card;
+  const text = card.text || '';
+  const words = (card.words || []).filter(function (w) {
+    return w.w && text.indexOf(w.w) >= 0;
+  });
+  if (!text || !words.length) return null;
+  const word = words[randInt(words.length)];
+  const masked = text.replace(word.w, '□'.repeat(word.w.length));
+  const pool = allWenWords().map(function (w) { return w.w; })
+    .filter(function (w) { return w.length === word.w.length; });
+  const distractors = unique(pool.filter(function (w) { return w !== word.w; }));
+  if (distractors.length < 3) return null;
+  const q = baseQuestion(levelId, index, 'wf_fill', pick.poem);
+  const built = optionList(word.w, sample(distractors, 3));
+  q.signature = pick.poem.id + '|wf_fill|' + masked;
+  q.promptText = '补上句中空缺的字词';
+  q.mainText = text;
+  q.masked = masked;
+  q.subText = '《' + pick.poem.title + '》';
+  q.options = built.options;
+  q.answerKey = built.answerKey;
+  q.tip = '缺失词共 ' + word.w.length + ' 个字';
+  return q;
+}
+
+/** 为由 / 分段的停顿串生成错误切分变体（同句不同切法），保证与正确项不重复 */
+function pauseVariants(plain, correct, count) {
+  const n = plain.length;
+  if (n < 6) return [];
+  const out = [];
+  const seen = {};
+  seen[correct] = true;
+  let guard = 0;
+  const maxCuts = Math.min(3, Math.floor(n / 3));
+  while (out.length < count && guard < 80) {
+    guard += 1;
+    const cuts = [];
+    const k = 1 + randInt(maxCuts);
+    for (let i = 0; i < k; i += 1) {
+      const p = 2 + randInt(n - 3); // 切点落在 2..n-2，避免首尾出现单字段
+      if (cuts.indexOf(p) < 0) cuts.push(p);
+    }
+    cuts.sort(function (a, b) { return a - b; });
+    const clean = [];
+    cuts.forEach(function (p) {
+      if (!clean.length || p - clean[clean.length - 1] >= 2) clean.push(p);
+    });
+    if (!clean.length) continue;
+    let s = '';
+    let last = 0;
+    clean.forEach(function (p) { s += plain.slice(last, p) + '/'; last = p; });
+    s += plain.slice(last);
+    if (seen[s]) continue;
+    seen[s] = true;
+    out.push(s);
+  }
+  return out;
+}
+
+/** 古文题型五：诵读断句 —— 给无标点句子，四选一选正确停顿 */
+function makePause(pick, levelId, index) {
+  const card = pick.card;
+  const correct = card.pause || '';
+  const plain = correct.replace(/\//g, '');
+  // 停顿串去斜杠后必须与去标点的原句一致，否则该卡片不适合出断句题
+  const stripPunct = function (s) { return s.replace(/[\s，。！？；：、,!?;:]/g, ''); };
+  if (!correct || correct.indexOf('/') < 0 || stripPunct(plain) !== stripPunct(card.text || '')) return null;
+  const distractors = pauseVariants(plain, correct, 3);
+  if (distractors.length < 3) return null;
+  const q = baseQuestion(levelId, index, 'pause', pick.poem);
+  const built = optionList(correct, distractors);
+  q.signature = pick.poem.id + '|pause|' + card.text;
+  q.promptText = '给这句话选出正确的停顿（/ 表示停顿）';
+  q.mainText = plain;
+  q.subText = '《' + pick.poem.title + '》';
+  q.options = built.options;
+  q.answerKey = built.answerKey;
+  q.tip = '先读懂意思，再按句意停顿';
+  return q;
+}
+
+const WEN_TYPES = { trans: 1, read: 1, word: 1, wf_fill: 1, pause: 1 };
+
+/** 取抽题池范围内的古文卡片 */
+function wenCardsInPool(pool) {
+  const ids = {};
+  pool.forEach(function (p) { ids[p.id] = true; });
+  return allWenCards().filter(function (item) { return ids[item.poem.id]; });
+}
+
 function makeByType(type, pool, levelId, index) {
   if (type === 'match') return makeMatch(pool, levelId, index);
+  if (WEN_TYPES[type]) {
+    const cards = wenCardsInPool(pool);
+    if (!cards.length) return null;
+    const pick = cards[randInt(cards.length)];
+    if (type === 'trans') return makeTrans(pick, levelId, index);
+    if (type === 'read') return makeRead(pick, levelId, index);
+    if (type === 'word') return makeWord(pick, levelId, index);
+    if (type === 'wf_fill') return makeWenFill(pick, levelId, index);
+    if (type === 'pause') return makePause(pick, levelId, index);
+  }
   if (!pool.length) return null;
   const poem = pool[randInt(pool.length)];
   if (type === 'fill') return makeFill(poem, levelId, index);
@@ -480,14 +698,21 @@ function buildQuestions(level) {
   const ordered = shuffle(plan);
   const list = [];
 
+  const isWen = level.genre === 'wen';
   ordered.forEach(function (type, index) {
     let q = null;
     for (let attempt = 0; attempt < 20 && !q; attempt += 1) {
       q = makeByType(type, pool, level.id, index);
     }
     if (!q) {
-      for (let attempt = 0; attempt < 20 && !q; attempt += 1) {
-        q = makeNext(pool[randInt(pool.length)], level.id, index);
+      // 古文关不能兜底到 makeNext（古文无 lines）——改兜底为文句翻译，稳定可出
+      for (let attempt = 0; attempt < 24 && !q; attempt += 1) {
+        if (isWen) {
+          const cards = wenCardsInPool(pool);
+          if (cards.length) q = makeTrans(cards[randInt(cards.length)], level.id, index);
+        } else if (pool.length) {
+          q = makeNext(pool[randInt(pool.length)], level.id, index);
+        }
       }
     }
     if (q) list.push(q);

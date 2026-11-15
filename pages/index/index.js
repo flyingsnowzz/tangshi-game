@@ -6,8 +6,8 @@ const { createCloudPage } = require('../../utils/cloud-page.js');
 
 // 吉祥物用内联图片数据，避免内置 H5 预览器解析不了包内绝对路径导致破图
 const MASCOT = require('../../utils/illustration-data.js').MASCOT;
-// 7 档字签：前 4 档唐诗，后 3 档宋词（词/苑/巅）
-const TIER_WORDS = ['初', '进', '挑', '巅', '词', '苑', '巅'];
+// 11 档字签：前 4 档唐诗（初/进/挑/巅），中 3 档宋词（词/苑/巅），后 4 档古文（文/典/道/宗）
+const TIER_WORDS = ['初', '进', '挑', '巅', '词', '苑', '巅', '文', '典', '道', '宗'];
 
 function starParts(stars) {
   const n = stars || 0;
@@ -91,7 +91,7 @@ createCloudPage({
         const record = state.levels[String(level.id)] || null;
         let status = 'locked';
         if (record && record.cleared) status = 'cleared';
-        else if (level.id <= state.unlocked) status = 'active';
+        else if (store.isUnlocked(level.id)) status = 'active';
         const stars = record ? record.stars : 0;
         const parts = starParts(stars);
         let countText = level.count + ' 道题';

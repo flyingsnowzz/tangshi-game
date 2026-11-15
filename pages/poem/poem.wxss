@@ -229,3 +229,63 @@
     font-weight: 800;
     color: #8a8b80;
 }
+
+/* 古文名句精读：像书页批注，左侧一道朱线 */
+.wen-card {
+    position: relative;
+    margin-top: 18rpx;
+    padding: 22rpx 24rpx 20rpx 28rpx;
+    background: #fffaf0;
+    border: 2rpx solid #f0e5cd;
+    border-radius: 22rpx;
+}
+
+.wen-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18rpx;
+    bottom: 18rpx;
+    width: 6rpx;
+    border-radius: 6rpx;
+    background: #c9803a;
+}
+
+.wen-card-text {
+    display: block;
+    font-weight: 800;
+    color: #2b3a35;
+    line-height: 1.75;
+    letter-spacing: 2rpx;
+}
+
+.wen-card-trans {
+    display: block;
+    margin-top: 10rpx;
+    color: #5b6a62;
+    line-height: 1.8;
+}
+
+.wen-word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10rpx;
+    margin-top: 14rpx;
+}
+
+.wen-word-chip {
+    padding: 4rpx 14rpx;
+    font-size: 21rpx;
+    color: #8a6320;
+    background: #fff3dc;
+    border: 2rpx solid #f0c46a;
+    border-radius: 16rpx;
+}
+
+.wen-card-pause {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 21rpx;
+    color: #9aa39b;
+    letter-spacing: 1rpx;
+}
