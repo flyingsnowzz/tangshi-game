@@ -37,7 +37,7 @@ function greetingOf() {
   return '晚上好呀';
 }
 
-/** 用日期做确定性索引，每天推一首诗，点击可看意象图与全诗 */
+/** 用日期做确定性索引，每天推一篇，点击可看意象图与全文 */
 function todayPoemOf() {
   const poems = catalog.getPoems();
   if (!poems.length) return null;

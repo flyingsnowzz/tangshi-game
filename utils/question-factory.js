@@ -308,7 +308,7 @@ function makeGuess(poem, levelId, index) {
   q.subText = '出自哪一首诗词？';
   q.options = built.options;
   q.answerKey = built.answerKey;
-  q.tip = '这首诗是《' + poem.title + '》';
+  q.tip = '这一篇是《' + poem.title + '》';
   return q;
 }
 

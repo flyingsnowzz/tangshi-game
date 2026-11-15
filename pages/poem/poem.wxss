@@ -187,7 +187,7 @@
     color: #9aa39b;
 }
 
-/* 上一首 / 下一首 翻看 */
+/* 上一篇 / 下一篇 翻看 */
 .poem-nav {
     display: flex;
     align-items: center;

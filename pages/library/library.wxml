@@ -24,7 +24,7 @@
         <text class="search-ico">找</text>
         <input
             class="search-input"
-            placeholder="搜诗名或诗人，比如「静夜思」「李白」"
+            placeholder="搜标题或作者，比如「静夜思」「李白」"
             value="{{keyword}}"
             bindinput="onSearch"
             confirm-type="search"

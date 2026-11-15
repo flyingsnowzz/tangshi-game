@@ -1,4 +1,4 @@
-/** 字体大小档位：主要作用于诗句与全诗，兼顾长时间阅读的舒适度 */
+/** 字体大小档位：主要作用于正文与全文，兼顾长时间阅读的舒适度 */
 const { getSettings } = require('./store.js');
 
 const POEM_FONT = { small: 34, normal: 42, large: 52 };

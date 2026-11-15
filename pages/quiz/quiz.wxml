@@ -128,7 +128,7 @@
     <!-- 操作 -->
     <view class="quiz-actions">
         <button class="btn-quiet action-btn" wx:if="{{hintEnabled && !showResult}}" bindtap="onToggleTip">{{tipVisible ? '收起提示' : '查看提示'}}</button>
-        <button class="btn-quiet action-btn" bindtap="onViewPoem">看全诗</button>
+        <button class="btn-quiet action-btn" bindtap="onViewPoem">看全文</button>
         <button class="btn-primary action-btn" wx:if="{{showResult}}" loading="{{finishing}}" disabled="{{finishing}}" bindtap="onNext">{{finishing ? '正在结算…' : (index + 1 >= total ? '完成本关' : '下一题')}}</button>
     </view>
 

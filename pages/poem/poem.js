@@ -49,7 +49,7 @@ createCloudPage({
   onCloudFirst: function (options) {
     const poem = catalog.getPoem(options.poemId);
     if (!poem) {
-      wx.showToast({ title: '未找到这首诗', icon: 'none' });
+      wx.showToast({ title: '没找到这一篇', icon: 'none' });
       setTimeout(function () { wx.navigateBack(); }, 500);
       return;
     }
@@ -101,7 +101,7 @@ createCloudPage({
     wx.showToast({ title: '已收进诗签册', icon: 'success' });
   },
 
-  /** 上一首 / 下一首：用 redirectTo 替换当前页，连续翻看时堆栈不会无限变深 */
+  /** 上一篇 / 下一篇：用 redirectTo 替换当前页，连续翻看时堆栈不会无限变深 */
   onPrev: function () {
     if (!this.data.hasPrev) return;
     wx.redirectTo({ url: '/pages/poem/poem?poemId=' + this.data.prevId });

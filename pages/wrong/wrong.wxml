@@ -37,7 +37,7 @@
             <text class="wrong-from">《{{item.title}}》 {{item.author}}</text>
             <view class="rule"></view>
             <view class="wrong-ops">
-                <text class="wrong-op" data-poemid="{{item.poemId}}" catchtap="viewPoem">看全诗</text>
+                <text class="wrong-op" data-poemid="{{item.poemId}}" catchtap="viewPoem">看全文</text>
                 <text class="wrong-op wrong-op-master" data-signature="{{item.signature}}" catchtap="removeOne">已掌握，请它出去</text>
             </view>
         </view>

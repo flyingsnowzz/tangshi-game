@@ -38,10 +38,10 @@
         <text class="poem-illus-caption">{{illustration.caption}}</text>
     </view>
 
-    <!-- 全诗 / 全文 -->
+    <!-- 全文：诗 / 词 / 文 三轨统一叫「全文」 -->
     <view class="poem-body">
         <view class="section-head">
-            <text class="section-head-text">{{poem.genre === 'wen' ? '通读全文' : '把整首诗读一遍'}}</text>
+            <text class="section-head-text">通读全文</text>
         </view>
         <view class="poem-lines">
             <text class="poem-line" wx:for="{{poem.displayLines}}" wx:key="*this" style="font-size:{{poemFs}}rpx">{{item}}</text>
@@ -66,7 +66,7 @@
     <!-- 白话释义 / 全文大意 -->
     <view class="poem-block">
         <view class="section-head">
-            <text class="section-head-text">{{poem.genre === 'wen' ? '全文大意' : '这首诗在说什么'}}</text>
+            <text class="section-head-text">全文大意</text>
         </view>
         <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{poem.meaning}}</text>
     </view>
@@ -74,7 +74,7 @@
     <!-- 创作背景 -->
     <view class="poem-block">
         <view class="section-head">
-            <text class="section-head-text">诗人写它的时候</text>
+            <text class="section-head-text">作者写它的时候</text>
         </view>
         <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{poem.background}}</text>
     </view>
@@ -82,20 +82,20 @@
     <!-- 作者简介 -->
     <view class="poem-block">
         <view class="section-head">
-            <text class="section-head-text">认识一下这位诗人</text>
+            <text class="section-head-text">认识一下这位作者</text>
         </view>
         <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{authorIntro}}</text>
     </view>
 
-    <button class="share-btn" open-type="share" bindtap="onShareTap">把这首诗发给同学</button>
-    <view class="share-tip">转发卡片会带上诗名和作者，点开就能读全诗</view>
+    <button class="share-btn" open-type="share" bindtap="onShareTap">把它发给同学</button>
+    <view class="share-tip">转发卡片会带上标题和作者，点开就能读全文</view>
 
-    <!-- 上一首 / 下一首：考试之余可以一首一首往下读 -->
+    <!-- 上一篇 / 下一篇：考试之余可以一篇一篇往下读 -->
     <view class="poem-nav">
-        <view class="poem-nav-btn poem-nav-prev {{hasPrev ? '' : 'poem-nav-disabled'}}" bindtap="onPrev">‹ 上一首</view>
+        <view class="poem-nav-btn poem-nav-prev {{hasPrev ? '' : 'poem-nav-disabled'}}" bindtap="onPrev">‹ 上一篇</view>
         <text class="poem-nav-seq">{{seq}} / {{total}}</text>
-        <view class="poem-nav-btn poem-nav-next {{hasNext ? '' : 'poem-nav-disabled'}}" bindtap="onNext">下一首 ›</view>
+        <view class="poem-nav-btn poem-nav-next {{hasNext ? '' : 'poem-nav-disabled'}}" bindtap="onNext">下一篇 ›</view>
     </view>
 
-    <view class="poem-foot">读一遍全诗，再回去答题就更容易记住啦</view>
+    <view class="poem-foot">读一遍全文，再回去答题就更容易记住啦</view>
 </view>
