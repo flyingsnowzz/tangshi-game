@@ -633,6 +633,8 @@ function makeWenFill(pick, levelId, index) {
   q.promptText = '补上句中空缺的字词';
   q.mainText = text;
   q.masked = masked;
+  // 文言句来自 card.text，本身已带原文标点，展示版与白文版一致
+  q.maskedView = masked;
   q.subText = '《' + pick.poem.title + '》';
   q.options = built.options;
   q.answerKey = built.answerKey;
