@@ -671,16 +671,19 @@
 }
 
 /* ---- 关卡卡片 ---- */
+/* 用 Grid 均分两列：不再让 rpx 与百分比混算（calc(50% - 9rpx) × 2 + gap 恰好
+   等于 100%，桌面版微信的 rpx 换算/浮点误差会让两张卡片差一点放不下而换行成单列）。
+   minmax(0, 1fr) + min-width:0 保证两列等宽，且卡片内容不会把某一列撑破。 */
 .level-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18rpx;
     margin-top: 20rpx;
 }
 
 .level-card {
     box-sizing: border-box;
-    width: calc(50% - 9rpx);
+    min-width: 0;
     padding: 22rpx 20rpx 20rpx;
     background: #ffffff;
     border: 3rpx solid #f0e5cd;
