@@ -1,0 +1,221 @@
+/* 结算页 · 少年国风：彩带标题 + 弹跳星星 + 贴纸成绩卡 */
+.result {
+    padding-top: 56rpx;
+}
+
+.result-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40rpx;
+}
+
+.result-seal {
+    width: 96rpx;
+    height: 96rpx;
+    font-size: 46rpx;
+    border-radius: 28rpx;
+    animation: star-pop 460ms ease-out;
+}
+
+.result-title {
+    margin-top: 24rpx;
+    font-size: 52rpx;
+    font-weight: 800;
+    letter-spacing: 6rpx;
+    color: #2b3a35;
+}
+
+.result-sub {
+    margin-top: 12rpx;
+    font-size: 24rpx;
+    color: #6c7a72;
+}
+
+.result-card {
+    padding: 44rpx 30rpx 34rpx;
+    text-align: center;
+    border-color: #f0d79a;
+    border-radius: 32rpx;
+    box-shadow: 0 8rpx 0 #f4e6c4, 0 14rpx 30rpx rgba(46, 80, 68, 0.07);
+}
+
+.big-stars {
+    display: flex;
+    justify-content: center;
+    gap: 24rpx;
+}
+
+.big-star {
+    font-size: 80rpx;
+    color: #e3ddcd;
+    line-height: 1;
+}
+
+.big-star.on {
+    color: #f5a340;
+    text-shadow: 0 6rpx 0 #e0ad3c;
+    animation: star-pop 420ms ease-out both;
+}
+
+.big-star.star-2 {
+    animation-delay: 120ms;
+}
+
+.big-star.star-3 {
+    animation-delay: 240ms;
+}
+
+.result-message {
+    display: block;
+    margin-top: 24rpx;
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #207a6e;
+    letter-spacing: 2rpx;
+}
+
+.result-stats {
+    display: flex;
+    margin-top: 8rpx;
+}
+
+.result-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18rpx 6rpx;
+    background: #fffaf0;
+    border-radius: 22rpx;
+    margin: 0 6rpx;
+}
+
+.result-stat-value {
+    font-size: 38rpx;
+    font-weight: 800;
+    color: #e2604f;
+}
+
+.result-stat-label {
+    margin-top: 8rpx;
+    font-size: 21rpx;
+    color: #8a8b80;
+}
+
+.points-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30rpx;
+    padding-top: 22rpx;
+    border-top: 2rpx dashed #f0e5cd;
+    font-size: 25rpx;
+    color: #6c7a72;
+}
+
+.points-value {
+    color: #f5a340;
+    font-weight: 800;
+    font-size: 30rpx;
+}
+
+/* 新诗签 */
+.sign-box {
+    border-color: #f0d79a;
+    border-radius: 30rpx;
+    box-shadow: 0 7rpx 0 #f4e6c4;
+}
+
+.result-note {
+    margin-top: 24rpx;
+    background: #fff8e6;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 26rpx;
+}
+
+.result-note-text {
+    font-size: 24rpx;
+    font-weight: 700;
+    color: #8a6320;
+    line-height: 1.7;
+}
+
+.all-done {
+    margin-top: 28rpx;
+    padding: 22rpx;
+    text-align: center;
+    font-size: 27rpx;
+    font-weight: 800;
+    color: #8a5b12;
+    background: #ffd66b;
+    border-radius: 26rpx;
+    box-shadow: 0 6rpx 0 #f0c14a;
+    letter-spacing: 2rpx;
+}
+
+.result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20rpx;
+    margin-top: 44rpx;
+}
+
+.result-actions button {
+    width: 100%;
+}
+
+.result-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40rpx;
+    font-size: 24rpx;
+    font-weight: 700;
+    color: #207a6e;
+}
+
+.link-split {
+    margin: 0 24rpx;
+    color: #c9bda5;
+}
+
+/* 诗签缩略图两级降级都失败时的「诗」字签 */
+.sign-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 120rpx;
+    font-size: 48rpx;
+    font-weight: 800;
+    color: #c9a227;
+    background: #fff3dc;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 20rpx;
+}
+
+.sign-img {
+    display: block;
+    width: 100%;
+    border-radius: 20rpx;
+    background: #ffffff;
+}
+
+.sign-name {
+    display: block;
+    margin-top: 8rpx;
+    font-size: 20rpx;
+    font-weight: 700;
+    color: #8a6320;
+    text-align: center;
+}
+
+/* 真实图出处：小字、克制 */
+.sign-credit {
+    display: block;
+    margin-top: 2rpx;
+    font-size: 16rpx;
+    font-weight: 600;
+    color: #a98c4f;
+    text-align: center;
+}

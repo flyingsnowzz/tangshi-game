@@ -1,0 +1,9 @@
+{
+  "name": "tangshi-game",
+  "version": "1.0.0",
+  "private": true,
+  "description": "唐诗闯关小游戏（原生微信小程序 · 云托管）",
+  "dependencies": {
+    "@tencent-ai/workbuddy-cloud-sdk": "dev"
+  }
+}

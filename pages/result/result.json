@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "通关结算",
+  "usingComponents": {
+    "login-sheet": "../../components/login-sheet/login-sheet"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/quiz/quiz",
+    "pages/result/result",
+    "pages/poem/poem",
+    "pages/library/library",
+    "pages/wrong/wrong",
+    "pages/profile/profile",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "navigationBarTitleText": "唐诗闯关",
+    "navigationBarBackgroundColor": "#fffaf0",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#fffaf0",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

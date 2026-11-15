@@ -1,0 +1,212 @@
+/* 诗库 · 少年国风：筛选条 + 诗列表，挑一首慢慢读 */
+.library {
+    padding-top: 24rpx;
+}
+
+/* ---- 标题 ---- */
+.lib-head {
+    display: flex;
+    align-items: baseline;
+    padding: 0 6rpx;
+}
+
+.lib-title {
+    font-size: 46rpx;
+    font-weight: 800;
+    letter-spacing: 5rpx;
+    color: #2b3a35;
+}
+
+.lib-sub {
+    margin-left: 18rpx;
+    font-size: 22rpx;
+    color: #8a8b80;
+}
+
+/* ---- 搜索框 ---- */
+.search-bar {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin-top: 24rpx;
+    padding: 0 20rpx;
+    height: 76rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 26rpx;
+    box-shadow: 0 6rpx 0 #f4ead5;
+}
+
+.search-ico {
+    flex-shrink: 0;
+    width: 44rpx;
+    height: 44rpx;
+    line-height: 44rpx;
+    text-align: center;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 14rpx;
+    margin-right: 16rpx;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 26rpx;
+    color: #2b3a35;
+}
+
+.search-clear {
+    flex-shrink: 0;
+    padding: 8rpx 18rpx;
+    margin-left: 12rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #c9c2b2;
+    border-radius: 18rpx;
+}
+
+/* ---- 学段筛选条 ---- */
+.filter-scroll {
+    margin-top: 22rpx;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.filter-row {
+    display: inline-flex;
+    gap: 14rpx;
+    padding: 4rpx 2rpx;
+}
+
+.filter-chip {
+    flex-shrink: 0;
+    padding: 12rpx 26rpx;
+    font-size: 24rpx;
+    font-weight: 800;
+    color: #6a7a70;
+    background: #ffffff;
+    border: 3rpx solid #e7e0cf;
+    border-radius: 24rpx;
+}
+
+.filter-chip-on {
+    color: #ffffff;
+    background: #2f9e8f;
+    border-color: #278b7d;
+    box-shadow: 0 5rpx 0 #207a6e;
+}
+
+/* ---- 计数 ---- */
+.lib-count {
+    display: block;
+    margin-top: 18rpx;
+    padding: 0 6rpx;
+    font-size: 22rpx;
+    font-weight: 700;
+    color: #9aa39b;
+}
+
+/* ---- 诗列表 ---- */
+.poem-list {
+    margin-top: 12rpx;
+}
+
+.poem-row {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin-top: 16rpx;
+    padding: 22rpx 22rpx 22rpx 24rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 26rpx;
+    box-shadow: 0 6rpx 0 #f4ead5;
+}
+
+.poem-row-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.poem-row-top {
+    display: flex;
+    align-items: center;
+}
+
+.poem-row-title {
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    letter-spacing: 1rpx;
+}
+
+.poem-row-sign {
+    margin-left: 12rpx;
+    padding: 2rpx 12rpx;
+    font-size: 20rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #e2604f;
+    border-radius: 14rpx;
+}
+
+.poem-row-meta {
+    margin-top: 8rpx;
+    font-size: 21rpx;
+    color: #8a8b80;
+}
+
+.poem-row-line {
+    margin-top: 10rpx;
+    font-size: 23rpx;
+    color: #5aa47e;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.poem-row-go {
+    flex-shrink: 0;
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    text-align: center;
+    margin-left: 16rpx;
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 50%;
+    box-shadow: 0 5rpx 0 #d9862a;
+}
+
+/* ---- 空状态 ---- */
+.lib-empty {
+    margin-top: 40rpx;
+    padding: 44rpx 30rpx;
+    text-align: center;
+    background: #fffaf0;
+    border: 3rpx dashed #e7e0cf;
+    border-radius: 24rpx;
+}
+
+.lib-empty-text {
+    font-size: 24rpx;
+    font-weight: 700;
+    color: #9aa39b;
+}
+
+/* ---- 页脚 ---- */
+.lib-foot {
+    margin-top: 40rpx;
+    text-align: center;
+    font-size: 22rpx;
+    color: #9aa39b;
+}

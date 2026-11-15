@@ -1,0 +1,76 @@
+<!-- 内容加载 / 异常 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗库…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell library" wx:if="{{authState === 'ready'}}">
+
+    <!-- 标题区 -->
+    <view class="lib-head">
+        <text class="lib-title">诗库</text>
+        <text class="lib-sub">挑一首，慢慢读 · 共 {{total}} 首</text>
+    </view>
+
+    <!-- 搜索 -->
+    <view class="search-bar">
+        <text class="search-ico">找</text>
+        <input
+            class="search-input"
+            placeholder="搜诗名或诗人，比如「静夜思」「李白」"
+            value="{{keyword}}"
+            bindinput="onSearch"
+            confirm-type="search"
+        />
+        <view class="search-clear" wx:if="{{keyword}}" bindtap="onClearSearch">清空</view>
+    </view>
+
+    <!-- 学段筛选 -->
+    <scroll-view class="filter-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
+        <view class="filter-row">
+            <view
+                class="filter-chip {{activeFilter === item.key ? 'filter-chip-on' : ''}}"
+                wx:for="{{filters}}"
+                wx:key="key"
+                data-key="{{item.key}}"
+                bindtap="onFilterTap"
+            >{{item.name}}</view>
+        </view>
+    </scroll-view>
+
+    <text class="lib-count">正在显示 {{shown}} 首</text>
+
+    <!-- 诗列表 -->
+    <view class="poem-list">
+        <view
+            class="poem-row"
+            wx:for="{{list}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="onPoemTap"
+        >
+            <view class="poem-row-main">
+                <view class="poem-row-top">
+                    <text class="poem-row-title">{{item.title}}</text>
+                    <text class="poem-row-sign" wx:if="{{item.collected}}">签</text>
+                </view>
+                <text class="poem-row-meta">{{item.author}} · {{item.form}} · {{item.grade}}</text>
+                <text class="poem-row-line">{{item.firstLine}}</text>
+            </view>
+            <view class="poem-row-go">读</view>
+        </view>
+    </view>
+
+    <view class="lib-empty" wx:if="{{shown === 0}}">
+        <text class="lib-empty-text">这里还空空的～去诗库或闯关里收几张诗签吧</text>
+    </view>
+
+    <view class="lib-foot">考试之余，挑一首喜欢的，慢慢赏吧</view>
+</view>

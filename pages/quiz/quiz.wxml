@@ -1,0 +1,159 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell quiz" wx:if="{{authState === 'ready'}}">
+
+    <!-- 进度 -->
+    <view class="quiz-top">
+        <view class="quiz-top-row">
+            <text class="quiz-pos">第 {{index + 1}} / {{total}} 题</text>
+            <text class="tag quiz-type">{{typeName}}</text>
+        </view>
+        <view class="progress-track">
+            <view class="progress-fill" style="width:{{progressPercent}}%"></view>
+        </view>
+        <view class="quiz-meta">
+            <text>{{levelTier}} · {{levelName}}</text>
+            <text>答错 {{wrongCount}} 次</text>
+        </view>
+    </view>
+
+    <!-- 题干 -->
+    <view class="question-card paper-card">
+        <text class="q-prompt">{{current.promptText}}</text>
+        <image class="q-image" wx:if="{{current.type === 'image' && imageSrc && !imageFailed}}" src="{{imageSrc}}" mode="aspectFit" binderror="onImageError" />
+        <text class="q-image-credit" wx:if="{{current.type === 'image' && imageReal && !imageFailed}}">{{imageCredit}}</text>
+        <view class="q-image-note" wx:if="{{current.type === 'image' && imageFailed}}">
+            <text class="q-image-note-title">意象小画：{{current.imageMotif}}</text>
+            <text class="q-image-note-text">小画暂时打不开，先想想这幅画说的是哪句诗</text>
+        </view>
+        <view class="q-verse" wx:if="{{current.type === 'fill'}}">
+            <text class="q-masked" style="font-size:{{poemFs}}rpx">{{current.masked}}</text>
+        </view>
+        <view class="q-verse" wx:elif="{{current.displayVerse}}">
+            <text style="font-size:{{poemFs}}rpx">{{current.displayMain}}</text>
+        </view>
+        <view class="q-meaning" wx:elif="{{current.displayMain && current.type !== 'match'}}">
+            <text style="font-size:{{bodyFs}}rpx">{{current.displayMain}}</text>
+        </view>
+        <view class="q-match-note" wx:elif="{{current.type === 'match'}}">
+            <text style="font-size:{{bodyFs}}rpx">{{current.mainText}}</text>
+        </view>
+        <text class="q-sub">{{current.subText}}</text>
+    </view>
+
+    <!-- 四选一 -->
+    <view class="options" wx:if="{{isChoice}}">
+        <view
+            class="option option-{{item.state}}"
+            wx:for="{{optionsView}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="onOptionTap"
+        >
+            <text class="option-key">{{item.key}}</text>
+            <text class="option-text" style="font-size:{{bodyFs}}rpx">{{item.text}}</text>
+        </view>
+    </view>
+
+    <!-- 诗句排排队 -->
+    <view class="options order-area" wx:elif="{{isOrder}}">
+        <view
+            class="option option-{{item.state}} order-item"
+            wx:for="{{orderView}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="onOrderTap"
+        >
+            <text class="order-seq" wx:if="{{item.seq}}">{{item.seq}}</text>
+            <text class="order-seq order-seq-empty" wx:else>·</text>
+            <text class="option-text" style="font-size:{{bodyFs}}rpx">{{item.text}}</text>
+        </view>
+        <view class="order-reset" wx:if="{{!showResult}}" bindtap="onOrderReset">重排一次</view>
+    </view>
+
+    <!-- 配对题 -->
+    <view class="match-area" wx:else>
+        <view class="match-col">
+            <text class="match-col-title">诗人</text>
+            <view
+                class="match-item {{item.state}}"
+                wx:for="{{leftView}}"
+                wx:key="key"
+                data-key="{{item.key}}"
+                bindtap="onLeftTap"
+            >{{item.text}}</view>
+        </view>
+        <view class="match-col">
+            <text class="match-col-title">诗句</text>
+            <view
+                class="match-item match-item-line {{item.state}}"
+                wx:for="{{rightView}}"
+                wx:key="key"
+                data-key="{{item.key}}"
+                bindtap="onRightTap"
+            >{{item.text}}</view>
+        </view>
+    </view>
+
+    <view class="match-msg" wx:if="{{matchHint}}">{{matchHint}}</view>
+
+    <!-- 反馈 -->
+    <view class="feedback feedback-wrong" wx:if="{{isWrong}}">
+        <text>{{feedback}}</text>
+    </view>
+    <view class="feedback feedback-right" wx:if="{{showResult}}">
+        <text class="feedback-title">{{feedback}}</text>
+        <text class="feedback-line" wx:if="{{current.answerText}}" style="font-size:{{poemFs}}rpx">{{current.answerText}}</text>
+    </view>
+
+    <view class="combo-tip" wx:if="{{comboText && !isWrong}}">{{comboText}}</view>
+
+    <!-- 提示 -->
+    <view class="tip-box" wx:if="{{tipVisible}}">
+        <text class="tip-label">提示</text>
+        <text class="tip-text">{{current.tip}}</text>
+    </view>
+
+    <!-- 操作 -->
+    <view class="quiz-actions">
+        <button class="btn-quiet action-btn" wx:if="{{hintEnabled && !showResult}}" bindtap="onToggleTip">{{tipVisible ? '收起提示' : '查看提示'}}</button>
+        <button class="btn-quiet action-btn" bindtap="onViewPoem">看全诗</button>
+        <button class="btn-primary action-btn" wx:if="{{showResult}}" loading="{{finishing}}" disabled="{{finishing}}" bindtap="onNext">{{finishing ? '正在结算…' : (index + 1 >= total ? '完成本关' : '下一题')}}</button>
+    </view>
+
+    <view class="quiz-exit" bindtap="onExit">退出本次闯关</view>
+
+    <!-- 预览器不模拟页面路由时的页内结算：保证「完成本关」一定有可见结果 -->
+    <view class="finish-mask" wx:if="{{routeFailed}}">
+        <view class="finish-panel">
+            <view class="finish-seal">过</view>
+            <text class="finish-title">过关啦！</text>
+            <text class="finish-sub">第 {{fallback.levelId}} 关 · {{fallback.levelName}}</text>
+            <view class="finish-stars">
+                <text class="finish-star-on">{{fallback.starOn}}</text><text class="finish-star-off">{{fallback.starOff}}</text>
+            </view>
+            <view class="finish-stats">
+                <view class="finish-stat"><text class="finish-stat-value">+{{fallback.gained}}</text><text class="finish-stat-label">本次积分</text></view>
+                <view class="finish-stat"><text class="finish-stat-value">{{fallback.total}}</text><text class="finish-stat-label">完成题目</text></view>
+                <view class="finish-stat"><text class="finish-stat-value">{{fallback.wrongCount}}</text><text class="finish-stat-label">答错次数</text></view>
+            </view>
+            <text class="finish-sign">新收集 {{fallback.signCount}} 枚诗签</text>
+            <text class="finish-note">成绩已经存好啦。当前预览没有模拟页面跳转，真机小程序会自动进入结算页；在这里也能直接接着闯关。</text>
+            <view class="finish-btns">
+                <view class="finish-btn" bindtap="restartFromFallback">再玩一次</view>
+                <view class="finish-btn finish-btn-primary" bindtap="startNextFromFallback">{{fallback.nextLabel}}</view>
+            </view>
+        </view>
+    </view>
+</view>

@@ -1,0 +1,566 @@
+/* 答题页 · 少年国风：贴纸选项、圆牌字母、活泼反馈 */
+.quiz {
+    padding-top: 20rpx;
+}
+
+.quiz-top {
+    box-sizing: border-box;
+    padding: 24rpx 26rpx;
+    margin-bottom: 24rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 28rpx;
+    box-shadow: 0 7rpx 0 #f4ead5;
+}
+
+.quiz-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18rpx;
+}
+
+.quiz-pos {
+    font-size: 27rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    letter-spacing: 1rpx;
+}
+
+.quiz-type {
+    padding: 8rpx 20rpx;
+    font-weight: 800;
+    color: #8a5b12;
+    background: #ffd66b;
+}
+
+.quiz-top .progress-track {
+    height: 20rpx;
+}
+
+.quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16rpx;
+    font-size: 22rpx;
+    color: #8a8b80;
+}
+
+/* 提干卡 */
+.question-card {
+    padding: 36rpx 30rpx;
+    text-align: center;
+    border-radius: 30rpx;
+    border-color: #f0d79a;
+    box-shadow: 0 8rpx 0 #f4e6c4, 0 14rpx 30rpx rgba(46, 80, 68, 0.06);
+}
+
+.q-prompt {
+    display: block;
+    font-size: 27rpx;
+    font-weight: 800;
+    color: #e2604f;
+    letter-spacing: 2rpx;
+}
+
+.q-verse {
+    margin: 32rpx 0 22rpx;
+    padding: 24rpx 0;
+    background: #fffaf0;
+    border-radius: 20rpx;
+}
+
+.q-verse text {
+    color: #2b3a35;
+    line-height: 1.9;
+    letter-spacing: 4rpx;
+}
+
+.q-masked {
+    color: #e2604f;
+    letter-spacing: 6rpx;
+    font-weight: 700;
+}
+
+.q-meaning {
+    margin: 28rpx 0 20rpx;
+    padding: 18rpx 20rpx;
+    background: #e2f5ef;
+    border-radius: 20rpx;
+    text-align: left;
+    line-height: 1.9;
+    color: #2b3a35;
+}
+
+.q-match-note {
+    margin: 26rpx 0 18rpx;
+    padding: 16rpx 20rpx;
+    background: #fff3dc;
+    border-radius: 20rpx;
+    color: #8a6320;
+}
+
+.q-sub {
+    display: block;
+    margin-top: 14rpx;
+    font-size: 23rpx;
+    color: #8a8b80;
+}
+
+/* 看图猜诗：意象小画签 */
+.q-image {
+    display: block;
+    width: 100%;
+    height: 300rpx;
+    margin-top: 22rpx;
+    background: #fffaf0;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 22rpx;
+}
+
+/* 配图两级降级都失败时的意象文字签，不留空白框 */
+.q-image-note {
+    margin-top: 22rpx;
+    padding: 34rpx 26rpx;
+    background: #fff3dc;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 22rpx;
+    text-align: center;
+}
+
+.q-image-note-title {
+    display: block;
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #8a6320;
+}
+
+.q-image-note-text {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 24rpx;
+    color: #a17b3c;
+}
+
+/* 真实图出处：小字、克制，不抢题目 */
+.q-image-credit {
+    display: block;
+    margin-top: 10rpx;
+    font-size: 19rpx;
+    font-weight: 600;
+    text-align: right;
+    color: #a98c4f;
+}
+
+/* 四选一：贴纸卡 + 圆牌字母 */
+.options {
+    margin-top: 26rpx;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 100rpx;
+    margin-bottom: 18rpx;
+    padding: 18rpx 22rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 24rpx;
+    box-shadow: 0 6rpx 0 #f4ead5;
+}
+
+.option-key {
+    flex-shrink: 0;
+    width: 56rpx;
+    height: 56rpx;
+    line-height: 56rpx;
+    text-align: center;
+    margin-right: 20rpx;
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 18rpx;
+    box-shadow: 0 4rpx 0 #d9862a;
+}
+
+.option-text {
+    flex: 1;
+    color: #2b3a35;
+    line-height: 1.6;
+    letter-spacing: 2rpx;
+}
+
+.option-picked {
+    background: #e2f5ef;
+    border-color: #2f9e8f;
+    box-shadow: 0 6rpx 0 #c6ecdf;
+}
+
+.option-picked .option-key {
+    background: #2f9e8f;
+    box-shadow: 0 4rpx 0 #207a6e;
+}
+
+.option-wrong {
+    background: #ffeae3;
+    border-color: #e2604f;
+    box-shadow: 0 6rpx 0 #f8d6cb;
+}
+
+.option-wrong .option-key {
+    background: #e2604f;
+    box-shadow: 0 4rpx 0 #be473c;
+}
+
+/* 诗句排排队 */
+.order-area {
+    margin-top: 26rpx;
+}
+
+.order-item {
+    min-height: 92rpx;
+}
+
+.order-seq {
+    flex-shrink: 0;
+    width: 56rpx;
+    height: 56rpx;
+    line-height: 56rpx;
+    text-align: center;
+    margin-right: 20rpx;
+    font-size: 28rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 18rpx;
+    box-shadow: 0 4rpx 0 #d9862a;
+}
+
+.order-seq-empty {
+    color: #c3b8a0;
+    background: #fffaf0;
+    box-shadow: none;
+    border: 3rpx dashed #e8dcc0;
+}
+
+.option-picked .order-seq {
+    background: #2f9e8f;
+    box-shadow: 0 4rpx 0 #207a6e;
+}
+
+.order-reset {
+    margin: 6rpx auto 0;
+    padding: 14rpx 0;
+    width: 240rpx;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 800;
+    color: #8a6320;
+    background: #fff3dc;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 30rpx;
+}
+
+/* 配对题 */
+.match-area {
+    display: flex;
+    gap: 18rpx;
+    margin-top: 26rpx;
+}
+
+.match-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.match-col-title {
+    margin-bottom: 14rpx;
+    text-align: center;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #8a6320;
+    letter-spacing: 2rpx;
+}
+
+.match-item {
+    box-sizing: border-box;
+    min-height: 96rpx;
+    margin-bottom: 16rpx;
+    padding: 18rpx 12rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 22rpx;
+    box-shadow: 0 5rpx 0 #f4ead5;
+    font-size: 25rpx;
+    color: #2b3a35;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.match-item-line {
+    font-size: 23rpx;
+    letter-spacing: 1rpx;
+}
+
+.match-selected {
+    background: #fff3dc;
+    border-color: #f5a340;
+    box-shadow: 0 5rpx 0 #f2d9a6;
+    color: #8a5b12;
+}
+
+.match-done {
+    background: #e2f5ef;
+    border-color: #8fd3c4;
+    box-shadow: 0 5rpx 0 #c6ecdf;
+    color: #4d8a7c;
+    opacity: 0.8;
+}
+
+.match-msg {
+    margin-top: 10rpx;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 700;
+    color: #e2604f;
+}
+
+/* 反馈 */
+.feedback {
+    margin-top: 24rpx;
+    padding: 24rpx 28rpx;
+    border-radius: 24rpx;
+    text-align: center;
+    border: 3rpx solid;
+}
+
+.feedback-wrong {
+    background: #ffeae3;
+    border-color: #f3b8a9;
+    color: #c14c3d;
+    font-size: 26rpx;
+    font-weight: 700;
+    box-shadow: 0 6rpx 0 #f8d6cb;
+}
+
+.feedback-right {
+    background: #e2f5ef;
+    border-color: #8fd3c4;
+    box-shadow: 0 6rpx 0 #c6ecdf;
+}
+
+.feedback-title {
+    display: block;
+    font-size: 28rpx;
+    font-weight: 800;
+    color: #207a6e;
+}
+
+.feedback-line {
+    display: block;
+    margin-top: 16rpx;
+    color: #2b3a35;
+    letter-spacing: 4rpx;
+    line-height: 1.7;
+}
+
+/* 提示 */
+.tip-box {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 22rpx;
+    padding: 22rpx 24rpx;
+    background: #fff8e6;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 24rpx;
+}
+
+.tip-label {
+    flex-shrink: 0;
+    margin-right: 18rpx;
+    padding: 4rpx 14rpx;
+    font-size: 21rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 16rpx;
+    letter-spacing: 2rpx;
+}
+
+.tip-text {
+    flex: 1;
+    font-size: 25rpx;
+    color: #3f5149;
+    line-height: 1.7;
+}
+
+/* 操作按钮 */
+.quiz-actions {
+    display: flex;
+    gap: 16rpx;
+    margin-top: 34rpx;
+}
+
+.action-btn {
+    flex: 1;
+    height: 92rpx;
+    line-height: 86rpx;
+    padding: 0 8rpx;
+    font-size: 26rpx;
+    border-radius: 46rpx;
+}
+
+.quiz-exit {
+    margin-top: 34rpx;
+    text-align: center;
+    font-size: 23rpx;
+    color: #9a9284;
+}
+
+/* ---- 页内结算兜底（预览器不模拟页面路由时） ---- */
+.finish-mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48rpx;
+    background: rgba(42, 48, 42, 0.55);
+}
+
+.finish-panel {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 56rpx 32rpx 34rpx;
+    background: #ffffff;
+    border: 4rpx solid #ffd66b;
+    border-radius: 36rpx;
+    box-shadow: 0 16rpx 40rpx rgba(42, 70, 62, 0.26);
+    text-align: center;
+    animation: pop-in 300ms ease-out;
+}
+
+.finish-seal {
+    width: 88rpx;
+    height: 88rpx;
+    line-height: 88rpx;
+    margin: -104rpx auto 20rpx;
+    text-align: center;
+    font-size: 42rpx;
+    color: #fffaf0;
+    background: #e2604f;
+    border: 6rpx solid #ffffff;
+    border-radius: 26rpx;
+    box-shadow: 0 6rpx 0 #be473c;
+}
+
+.finish-title {
+    display: block;
+    font-size: 46rpx;
+    font-weight: 800;
+    letter-spacing: 5rpx;
+    color: #2b3a35;
+}
+
+.finish-sub {
+    display: block;
+    margin-top: 10rpx;
+    font-size: 24rpx;
+    color: #6c7a72;
+}
+
+.finish-stars {
+    margin-top: 24rpx;
+}
+
+.finish-star-on {
+    font-size: 58rpx;
+    color: #f5a340;
+}
+
+.finish-star-off {
+    font-size: 58rpx;
+    color: #e3ddcd;
+}
+
+.finish-stats {
+    display: flex;
+    gap: 14rpx;
+    margin-top: 26rpx;
+}
+
+.finish-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18rpx 6rpx;
+    background: #fffaf0;
+    border-radius: 20rpx;
+}
+
+.finish-stat-value {
+    font-size: 32rpx;
+    font-weight: 800;
+    color: #e2604f;
+}
+
+.finish-stat-label {
+    margin-top: 6rpx;
+    font-size: 20rpx;
+    color: #8a8b80;
+}
+
+.finish-sign {
+    display: block;
+    margin-top: 22rpx;
+    font-size: 25rpx;
+    font-weight: 700;
+    color: #207a6e;
+}
+
+.finish-note {
+    display: block;
+    margin-top: 18rpx;
+    padding: 18rpx 20rpx;
+    font-size: 22rpx;
+    line-height: 1.7;
+    color: #8a7b5c;
+    background: #fff8e6;
+    border-radius: 20rpx;
+}
+
+.finish-btns {
+    display: flex;
+    gap: 18rpx;
+    margin-top: 28rpx;
+}
+
+.finish-btn {
+    flex: 1;
+    height: 88rpx;
+    line-height: 82rpx;
+    font-size: 27rpx;
+    font-weight: 800;
+    color: #207a6e;
+    background: #ffffff;
+    border: 3rpx solid #8fd3c4;
+    border-radius: 44rpx;
+}
+
+.finish-btn-primary {
+    color: #ffffff;
+    background: #2f9e8f;
+    border-color: #2f9e8f;
+    box-shadow: 0 6rpx 0 #207a6e;
+}

@@ -1,0 +1,187 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell home" wx:if="{{authState === 'ready'}}">
+
+    <!-- 小书童迎宾横幅 -->
+    <view class="hero">
+        <image class="hero-mascot" src="{{mascotPath}}" mode="aspectFit" />
+        <view class="hero-text">
+            <text class="hero-hi">{{greeting}}，小诗友</text>
+            <text class="hero-title">唐诗闯关</text>
+            <text class="hero-sub">中小学必背唐诗 · 玩着就会背</text>
+            <view class="hero-title-chip">{{titleName}}</view>
+        </view>
+        <view class="seal seal-small hero-seal">诗</view>
+    </view>
+
+    <!-- 每日鼓励语气泡 -->
+    <view class="cheer-bubble">
+        <text class="cheer-badge">今日加油</text>
+        <text class="cheer-text">{{cheerText}}</text>
+    </view>
+
+    <!-- 概览数据：三色贴纸 -->
+    <view class="overview">
+        <view class="overview-item overview-points">
+            <text class="overview-ico">分</text>
+            <text class="overview-value">{{summary.points}}</text>
+            <text class="overview-label">累计积分</text>
+        </view>
+        <view class="overview-item overview-levels">
+            <text class="overview-ico">关</text>
+            <text class="overview-value">{{summary.clearedCount}}<text class="overview-slash">/{{totalLevels}}</text></text>
+            <text class="overview-label">已通关</text>
+        </view>
+        <view class="overview-item overview-signs">
+            <text class="overview-ico">签</text>
+            <text class="overview-value">{{collectedCount}}<text class="overview-slash">/{{poemTotal}}</text></text>
+            <text class="overview-label">诗签收藏</text>
+        </view>
+    </view>
+
+    <!-- 继续闯关：大号主按钮 -->
+    <view class="next-card">
+        <view class="next-ribbon">{{nextEyebrow}}</view>
+        <view class="next-row">
+            <view class="next-left">
+                <text class="next-eyebrow">{{nextLevelTier}} · 第 {{nextLevelId}} 关</text>
+                <text class="next-name">{{nextLevelName}}</text>
+                <text class="next-desc">答对全部题目就能解锁下一关，答错可以马上重来</text>
+            </view>
+            <view class="next-btn" bindtap="startNext">
+                <text class="next-btn-word">开始</text>
+                <text class="next-btn-arrow">闯</text>
+            </view>
+        </view>
+        <view class="progress-track home-progress">
+            <view class="progress-fill" style="width:{{clearedPercent}}%"></view>
+        </view>
+        <text class="next-progress-tip">已经走完 {{clearedPercent}}% 的闯关路啦</text>
+    </view>
+
+    <!-- 今日一诗 -->
+    <view class="today-card" wx:if="{{today}}" bindtap="goTodayPoem">
+        <image class="today-thumb" src="{{today.image}}" mode="aspectFill" wx:if="{{today.image && !todayImageFailed}}" binderror="onTodayImageError" />
+        <text class="today-credit" wx:if="{{today.isReal && !todayImageFailed}}">{{today.credit}}</text>
+        <view class="today-thumb today-thumb-note" wx:elif="{{todayImageFailed}}">诗</view>
+        <view class="today-body">
+            <text class="today-label">今日一诗 · 每天认识一首</text>
+            <text class="today-title">《{{today.title}}》</text>
+            <text class="today-author">{{today.author}} · {{today.motif}}</text>
+        </view>
+        <view class="today-go">看</view>
+    </view>
+
+    <!-- 关卡梯度 -->
+    <view class="tier-block" wx:for="{{groups}}" wx:key="key" wx:for-item="group">
+        <view class="tier-banner tier-{{group.theme}}" bindtap="onTierTap" data-tier="{{group.tierIndex}}">
+            <view class="tier-badge">{{group.badgeWord}}</view>
+            <view class="tier-banner-text">
+                <text class="tier-banner-name">{{group.name}}</text>
+                <text class="tier-banner-sub">{{group.subtitle}}</text>
+            </view>
+            <text class="tier-banner-count">{{group.clearedCount}}/{{group.total}} 关</text>
+            <text class="tier-toggle">{{group.expanded ? '收起' : '展开'}}</text>
+        </view>
+        <view class="tier-track"><view class="tier-track-fill tier-fill-{{group.theme}}" style="width:{{group.percent}}%"></view></view>
+        <text class="tier-desc">{{group.desc}}</text>
+
+        <view class="level-grid" wx:if="{{group.expanded}}">
+            <view
+                class="level-card level-{{lv.status}}"
+                wx:for="{{group.levels}}"
+                wx:key="id"
+                wx:for-item="lv"
+                data-id="{{lv.id}}"
+                data-status="{{lv.status}}"
+                bindtap="onLevelTap"
+            >
+                <view class="level-top">
+                    <view class="level-badge level-badge-{{lv.status}}">{{lv.badge}}</view>
+                    <view class="stars" wx:if="{{lv.status === 'cleared'}}">
+                        <text class="star-on">{{lv.starOn}}</text><text class="star-off">{{lv.starOff}}</text>
+                    </view>
+                    <text class="level-state level-state-{{lv.status}}" wx:else>{{lv.statusText}}</text>
+                </view>
+                <text class="level-name">{{lv.name}}</text>
+                <text class="level-count">{{lv.countText}}</text>
+            </view>
+        </view>
+        <view class="tier-collapsed" wx:else bindtap="onTierTap" data-tier="{{group.tierIndex}}">
+            {{group.collapsedTip}}
+        </view>
+    </view>
+
+    <!-- 功能入口：彩色贴纸卡 -->
+    <view class="section-head entry-head">
+        <text class="section-head-text">我的小天地</text>
+    </view>
+    <view class="entry-row">
+        <view class="entry-item entry-wrong" bindtap="goWrong">
+            <view class="entry-ico">错</view>
+            <text class="entry-name">错题本</text>
+            <text class="entry-desc">{{wrongCount}} 道待复盘</text>
+        </view>
+        <view class="entry-item entry-profile" bindtap="goProfile">
+            <view class="entry-ico">长</view>
+            <text class="entry-name">成长档案</text>
+            <text class="entry-desc">称号与战绩</text>
+        </view>
+        <view class="entry-item entry-settings" bindtap="goSettings">
+            <view class="entry-ico">设</view>
+            <text class="entry-name">基础设置</text>
+            <text class="entry-desc">音效与字体</text>
+        </view>
+    </view>
+
+    <!-- 闲时翻翻：放到页面底部，不干扰闯关主路径 -->
+    <view class="section-head entry-head">
+        <text class="section-head-text">闲时翻翻</text>
+    </view>
+
+    <!-- 诗库入口：考试之余慢慢赏 -->
+    <view class="lib-entry" bindtap="goLibrary">
+        <view class="lib-entry-ico">库</view>
+        <view class="lib-entry-body">
+            <text class="lib-entry-title">诗库 · {{poemTotal}} 首唐诗慢慢读</text>
+            <text class="lib-entry-desc">不考试的时候，挑一首喜欢的慢慢赏</text>
+        </view>
+        <view class="lib-entry-go">去</view>
+    </view>
+
+    <!-- 诗签册：点进去看自己收下的诗 -->
+    <view class="sign-card sign-tappable" bindtap="goSignAlbum">
+        <view class="sign-head">
+            <view class="sign-badge">签</view>
+            <view class="sign-head-text">
+                <text class="sign-title">我的诗签册</text>
+                <text class="sign-desc">每收一首，存下一张诗意小画</text>
+            </view>
+            <text class="sign-count">{{collectedCount}}<text class="sign-count-total"> / {{poemTotal}}</text></text>
+            <view class="sign-go">翻看</view>
+        </view>
+        <view class="progress-track sign-track">
+            <view class="progress-fill sign-fill" style="width:{{collectPercent}}%"></view>
+        </view>
+        <text class="sign-tip">收满 {{poemTotal}} 张，就是一本属于自己的唐诗画册啦</text>
+    </view>
+
+    <button class="share-btn" open-type="share" bindtap="onShareTap">叫上同学一起背诗</button>
+    <view class="share-tip">在微信里打开就能转发给同学和群里</view>
+
+    <view class="home-foot">
+        <text class="foot-line">{{poemTotal}} 首唐诗 · 每首都有专属意象图</text>
+        <text class="foot-line">答错不扣分，随时可以重来</text>
+    </view>
+</view>

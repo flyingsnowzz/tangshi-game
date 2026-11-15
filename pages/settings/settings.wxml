@@ -1,0 +1,106 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell settings" wx:if="{{authState === 'ready'}}">
+
+    <view class="settings-head">
+        <text class="ink-title">我的设置</text>
+        <text class="settings-sub">按自己喜欢的来，随时都能改回来</text>
+    </view>
+
+    <view class="section-head">
+        <text class="section-head-text">声音和小提示</text>
+    </view>
+    <view class="setting-group">
+        <view class="setting-row">
+            <view class="setting-text">
+                <text class="setting-name">国风背景音乐</text>
+                <text class="setting-desc">进游戏时放一段轻轻的古风小曲</text>
+            </view>
+            <switch checked="{{settings.bgm}}" color="#2f9e8f" data-key="bgm" bindchange="onSwitch" />
+        </view>
+        <view class="setting-row">
+            <view class="setting-text">
+                <text class="setting-name">答题音效</text>
+                <text class="setting-desc">答对、答错、通关时的小提示音</text>
+            </view>
+            <switch checked="{{settings.sfx}}" color="#2f9e8f" data-key="sfx" bindchange="onSwitch" />
+        </view>
+        <view class="setting-row">
+            <view class="setting-text">
+                <text class="setting-name">闯关提示</text>
+                <text class="setting-desc">答题页留一个「查看提示」按钮</text>
+            </view>
+            <switch checked="{{settings.hint}}" color="#2f9e8f" data-key="hint" bindchange="onSwitch" />
+        </view>
+    </view>
+
+    <!-- 声音设置的状态反馈：切换后立刻看得见、也听得见 -->
+    <view class="sound-status">
+        <text class="sound-status-line">现在：答题音效 {{settings.sfx ? '开' : '关'}} · 背景音乐 {{settings.bgm ? '开' : '关'}}</text>
+        <button class="sound-try" bindtap="onTrySfx">试听一下</button>
+        <text class="sound-status-tip">预览里用轻量合成音，微信里播放完整国风音频</text>
+    </view>
+
+    <view class="section-head font-head">
+        <text class="section-head-text">诗句要多大</text>
+    </view>
+    <view class="font-group">
+        <view class="font-row">
+            <view
+                class="font-option {{settings.fontSize === item.key ? 'font-on' : ''}}"
+                wx:for="{{fontOptions}}"
+                wx:key="key"
+                data-key="{{item.key}}"
+                bindtap="onFont"
+            >
+                <text class="font-name">{{item.name}}</text>
+                <text class="font-desc">{{item.desc}}</text>
+            </view>
+        </view>
+        <view class="rule"></view>
+        <text class="preview-label">看看效果</text>
+        <text class="preview-line" style="font-size:{{previewFs}}rpx">床前明月光</text>
+        <text class="preview-line" style="font-size:{{previewFs}}rpx">疑是地上霜</text>
+    </view>
+
+    <view class="section-head font-head">
+        <text class="section-head-text">成绩存在哪儿</text>
+    </view>
+    <view class="account-box">
+        <block wx:if="{{isGuest}}">
+            <view class="account-row">
+                <view class="account-icon account-icon-guest">玩</view>
+                <view class="account-text">
+                    <text class="account-name">正在试玩</text>
+                    <text class="account-desc">成绩先存在这台设备上，通关后在结算页可以登录保存</text>
+                </view>
+            </view>
+        </block>
+        <block wx:else>
+            <view class="account-row">
+                <view class="account-icon account-icon-cloud">云</view>
+                <view class="account-text">
+                    <text class="account-name">成绩已经存到云端啦</text>
+                    <text class="account-desc">星星、积分和诗签都跟着账号走</text>
+                </view>
+                <button class="account-btn" bindtap="onSignOut">退出登录</button>
+            </view>
+        </block>
+    </view>
+
+    <view class="about-box">
+        <text class="about-title">关于这个游戏</text>
+        <text class="about-text">按小学和初中的必背唐诗整理，分四档梯度、十种玩法，每首诗都配了一张意象小画。答错不扣分，随时可以重来。</text>
+    </view>
+</view>

@@ -1,0 +1,108 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell result" wx:if="{{authState === 'ready'}}">
+
+    <view class="result-head">
+        <view class="seal result-seal">过</view>
+        <text class="result-title">过关啦！</text>
+        <text class="result-sub">第 {{levelId}} 关 · {{levelName}}（{{levelTier}}）</text>
+    </view>
+
+    <view class="result-card paper-card">
+        <view class="big-stars">
+            <text class="big-star star-1 {{stars >= 1 ? 'on' : ''}}">★</text>
+            <text class="big-star star-2 {{stars >= 2 ? 'on' : ''}}">★</text>
+            <text class="big-star star-3 {{stars >= 3 ? 'on' : ''}}">★</text>
+        </view>
+        <text class="result-message">{{message}}</text>
+
+        <view class="rule"></view>
+
+        <view class="result-stats">
+            <view class="result-stat">
+                <text class="result-stat-value">+{{gained}}</text>
+                <text class="result-stat-label">本次积分</text>
+            </view>
+            <view class="result-stat">
+                <text class="result-stat-value">{{total}}</text>
+                <text class="result-stat-label">完成题目</text>
+            </view>
+            <view class="result-stat">
+                <text class="result-stat-value">{{wrongCount}}</text>
+                <text class="result-stat-label">答错次数</text>
+            </view>
+        </view>
+
+        <view class="points-row">
+            <text>累计积分</text>
+            <text class="points-value">{{points}}</text>
+        </view>
+    </view>
+
+    <!-- 通关解锁的诗签：把意象图当作收集品 -->
+    <view class="sign-box paper-card" wx:if="{{signCount > 0}}">
+        <view class="section-head">
+            <text class="section-head-text">新收集 {{signCount}} 枚诗签</text>
+        </view>
+        <view class="sign-row">
+            <view class="sign-item" wx:for="{{newSigns}}" wx:key="path">
+                <image class="sign-img" wx:if="{{!item.failed}}" src="{{item.src}}" mode="widthFix" binderror="onSignImageError" data-idx="{{index}}" />
+                <view class="sign-img sign-note" wx:else>诗</view>
+                <text class="sign-name">{{item.motif}}</text>
+                <text class="sign-credit" wx:if="{{item.isReal}}">{{item.credit}}</text>
+            </view>
+        </view>
+        <text class="sign-tip">诗签册已经收了 {{collectedCount}} 首，继续闯关解锁更多</text>
+    </view>
+
+    <!-- 全应用唯一的登录入口：只在保存成绩时出现 -->
+    <view class="save-card" wx:if="{{isGuest}}">
+        <view class="save-icon">存</view>
+        <view class="save-text">
+            <text class="save-title">成绩还只在这台设备上</text>
+            <text class="save-desc">登录后存到云端，换手机也能接着闯关</text>
+        </view>
+        <view class="save-btn" bindtap="onOpenLogin">登录保存</view>
+    </view>
+    <view class="save-card save-done" wx:else>
+        <view class="save-icon save-icon-done">云</view>
+        <view class="save-text">
+            <text class="save-title">成绩已经存好啦</text>
+            <text class="save-desc">星星、积分和诗签都在云端替你收着</text>
+        </view>
+    </view>
+
+    <view class="result-note paper-card paper-card-tight" wx:if="{{wrongCount > 0}}">
+        <text class="result-note-text">答错的题已放进错题本，回头再练一遍就会啦。</text>
+    </view>
+
+    <view class="all-done" wx:if="{{allCleared}}">全部关卡通关，诗词小状元就是你！</view>
+
+    <view class="result-actions">
+        <button class="btn-ghost" bindtap="replay">再玩一次</button>
+        <button class="btn-primary" wx:if="{{hasNext}}" bindtap="next">冲下一关 · {{nextLevelName}}</button>
+        <button class="btn-primary" wx:else bindtap="goHome">返回闯关中心</button>
+    </view>
+
+    <button class="share-btn" open-type="share" bindtap="onShareTap">把这次成绩晒给同学</button>
+    <view class="share-tip">在微信里打开就能转发；内置预览里点不动是正常的</view>
+
+    <view class="result-links">
+        <text bindtap="goWrong">查看错题本</text>
+        <text class="link-split">|</text>
+        <text bindtap="goHome">返回闯关中心</text>
+    </view>
+
+    <login-sheet open="{{loginOpen}}" bind:close="onCloseLogin" bind:signedin="onSignedIn" />
+</view>

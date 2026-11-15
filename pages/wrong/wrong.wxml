@@ -1,0 +1,50 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell wrong-page" wx:if="{{authState === 'ready'}}">
+
+    <view class="wrong-head">
+        <view class="wrong-head-text">
+            <text class="ink-title">错题本</text>
+            <text class="wrong-sub">答错的题会自动收进来，第一次答对就能请它出去</text>
+        </view>
+        <view class="wrong-count">{{count}} 道</view>
+    </view>
+
+    <view class="wrong-empty" wx:if="{{count === 0}}">
+        <image class="wrong-mascot" src="{{mascotPath}}" mode="aspectFit" />
+        <text class="empty-title">一本错题都没有，真棒！</text>
+        <text class="empty-desc">放心去闯关吧，答错不扣星、不失败，随时都能重做。</text>
+    </view>
+
+    <view class="wrong-list" wx:else>
+        <view class="wrong-item" wx:for="{{list}}" wx:key="signature">
+            <view class="wrong-item-top">
+                <text class="tag tag-red">{{item.typeName}}</text>
+                <text class="wrong-times">错 {{item.wrongCount}} 次</text>
+            </view>
+            <text class="wrong-excerpt">{{item.excerpt}}</text>
+            <text class="wrong-from">《{{item.title}}》 {{item.author}}</text>
+            <view class="rule"></view>
+            <view class="wrong-ops">
+                <text class="wrong-op" data-poemid="{{item.poemId}}" catchtap="viewPoem">看全诗</text>
+                <text class="wrong-op wrong-op-master" data-signature="{{item.signature}}" catchtap="removeOne">已掌握，请它出去</text>
+            </view>
+        </view>
+    </view>
+
+    <view class="wrong-actions" wx:if="{{count > 0}}">
+        <button class="btn-primary" bindtap="redoAll">把错题再练一遍</button>
+        <text class="wrong-clear" bindtap="clearAll">清空错题本</text>
+    </view>
+</view>

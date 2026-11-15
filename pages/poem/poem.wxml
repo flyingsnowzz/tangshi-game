@@ -1,0 +1,86 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell poem-page" wx:if="{{authState === 'ready'}}">
+
+    <view class="poem-head">
+        <text class="poem-title">{{poem.title}}</text>
+        <view class="poem-meta">
+            <text class="tag">{{poem.author}}</text>
+            <text class="tag tag-gray">{{poem.form}}</text>
+            <text class="tag tag-gray">{{poem.grade}}</text>
+        </view>
+        <view class="collect-toggle {{collected ? 'collect-on' : ''}}" bindtap="onToggleCollect">
+            <text class="collect-ico">{{collected ? '签' : '＋'}}</text>
+            <text class="collect-word">{{collected ? '已在诗签册' : '收进诗签册'}}</text>
+        </view>
+    </view>
+
+    <!-- 诗意配图：像一张可以收集的诗意小画签 -->
+    <view class="poem-illus" wx:if="{{illustration}}">
+        <view class="illus-top">
+            <text class="illus-badge {{illusReal ? 'illus-badge-real' : ''}}">{{illusReal ? '诗意配图' : '意象小画'}}</text>
+            <text class="illus-tag">{{illustration.motif}}</text>
+        </view>
+        <image class="poem-illus-img" wx:if="{{!illusFailed}}" src="{{illusSrc}}" mode="widthFix" binderror="onIllusError" />
+        <view class="poem-illus-note" wx:if="{{illusFailed}}">意象小画：{{illustration.motif}}</view>
+        <text class="poem-illus-credit" wx:if="{{illusReal && !illusFailed}}">{{illusCredit}}</text>
+        <text class="poem-illus-caption">{{illustration.caption}}</text>
+    </view>
+
+    <!-- 全诗 -->
+    <view class="poem-body">
+        <view class="section-head">
+            <text class="section-head-text">把整首诗读一遍</text>
+        </view>
+        <view class="poem-lines">
+            <text class="poem-line" wx:for="{{poem.lines}}" wx:key="*this" style="font-size:{{poemFs}}rpx">{{item}}</text>
+        </view>
+    </view>
+
+    <!-- 白话释义 -->
+    <view class="poem-block">
+        <view class="section-head">
+            <text class="section-head-text">这首诗在说什么</text>
+        </view>
+        <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{poem.meaning}}</text>
+    </view>
+
+    <!-- 创作背景 -->
+    <view class="poem-block">
+        <view class="section-head">
+            <text class="section-head-text">诗人写它的时候</text>
+        </view>
+        <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{poem.background}}</text>
+    </view>
+
+    <!-- 作者简介 -->
+    <view class="poem-block">
+        <view class="section-head">
+            <text class="section-head-text">认识一下这位诗人</text>
+        </view>
+        <text class="poem-text" style="font-size:{{bodyFs}}rpx">{{authorIntro}}</text>
+    </view>
+
+    <button class="share-btn" open-type="share" bindtap="onShareTap">把这首诗发给同学</button>
+    <view class="share-tip">转发卡片会带上诗名和作者，点开就能读全诗</view>
+
+    <!-- 上一首 / 下一首：考试之余可以一首一首往下读 -->
+    <view class="poem-nav">
+        <view class="poem-nav-btn poem-nav-prev {{hasPrev ? '' : 'poem-nav-disabled'}}" bindtap="onPrev">‹ 上一首</view>
+        <text class="poem-nav-seq">{{seq}} / {{total}}</text>
+        <view class="poem-nav-btn poem-nav-next {{hasNext ? '' : 'poem-nav-disabled'}}" bindtap="onNext">下一首 ›</view>
+    </view>
+
+    <view class="poem-foot">读一遍全诗，再回去答题就更容易记住啦</view>
+</view>

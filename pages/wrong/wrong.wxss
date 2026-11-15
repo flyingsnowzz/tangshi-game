@@ -1,0 +1,157 @@
+/* 错题本 · 少年国风：吉祥物空态 + 贴纸卡片 */
+.wrong-page {
+    padding-top: 24rpx;
+}
+
+.wrong-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 30rpx;
+}
+
+.wrong-head-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.wrong-sub {
+    margin-top: 12rpx;
+    font-size: 23rpx;
+    color: #8a8b80;
+    line-height: 1.6;
+}
+
+.wrong-count {
+    flex-shrink: 0;
+    margin-left: 20rpx;
+    padding: 10rpx 22rpx;
+    background: #e2604f;
+    color: #ffffff;
+    font-size: 24rpx;
+    font-weight: 800;
+    border-radius: 24rpx;
+    box-shadow: 0 5rpx 0 #be473c;
+}
+
+/* 空态 */
+.wrong-empty {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 56rpx 36rpx 64rpx;
+    background: #e2f5ef;
+    border: 3rpx solid #8fd3c4;
+    border-radius: 32rpx;
+    box-shadow: 0 8rpx 0 #c6ecdf;
+}
+
+.wrong-mascot {
+    width: 190rpx;
+    height: 190rpx;
+    margin-bottom: 24rpx;
+    border-radius: 28rpx;
+    background: #ffffff;
+    border: 4rpx solid #ffffff;
+    animation: float 3s ease-in-out infinite;
+}
+
+.wrong-empty .empty-title {
+    font-size: 32rpx;
+    font-weight: 800;
+    color: #207a6e;
+}
+
+.wrong-empty .empty-desc {
+    margin-top: 14rpx;
+    font-size: 25rpx;
+    color: #5f8379;
+    line-height: 1.7;
+    text-align: center;
+}
+
+/* 错题卡 */
+.wrong-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22rpx;
+}
+
+.wrong-item {
+    box-sizing: border-box;
+    padding: 26rpx 28rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 28rpx;
+    box-shadow: 0 7rpx 0 #f4ead5;
+}
+
+.wrong-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wrong-item-top .tag {
+    font-weight: 800;
+    border-radius: 20rpx;
+}
+
+.wrong-times {
+    font-size: 22rpx;
+    font-weight: 700;
+    color: #e2604f;
+}
+
+.wrong-excerpt {
+    display: block;
+    margin-top: 20rpx;
+    font-size: 31rpx;
+    font-weight: 700;
+    color: #2b3a35;
+    letter-spacing: 2rpx;
+    line-height: 1.7;
+}
+
+.wrong-from {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 23rpx;
+    color: #8a8b80;
+}
+
+.wrong-item .rule {
+    margin: 20rpx 0 16rpx;
+}
+
+.wrong-ops {
+    display: flex;
+    justify-content: space-between;
+}
+
+.wrong-op {
+    padding: 10rpx 22rpx;
+    font-size: 24rpx;
+    font-weight: 800;
+    color: #207a6e;
+    background: #dff3ec;
+    border-radius: 22rpx;
+}
+
+.wrong-op-master {
+    color: #8a5b12;
+    background: #fff3dc;
+}
+
+.wrong-actions {
+    margin-top: 44rpx;
+}
+
+.wrong-clear {
+    display: block;
+    margin-top: 28rpx;
+    text-align: center;
+    font-size: 23rpx;
+    color: #9a9284;
+}

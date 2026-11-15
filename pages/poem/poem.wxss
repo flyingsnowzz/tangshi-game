@@ -1,0 +1,231 @@
+/* 诗词详情 · 少年国风：口语化小标题 + 诗意小画签 */
+.poem-page {
+    padding-top: 24rpx;
+}
+
+.poem-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 28rpx;
+}
+
+.poem-title {
+    font-size: 48rpx;
+    font-weight: 800;
+    letter-spacing: 5rpx;
+    color: #2b3a35;
+}
+
+.poem-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12rpx;
+    margin-top: 18rpx;
+}
+
+.poem-meta .tag {
+    font-weight: 700;
+    border-radius: 22rpx;
+}
+
+/* 收进诗签册（可点切换） */
+.collect-toggle {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 18rpx;
+    padding: 8rpx 22rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #8a6320;
+    background: #fff3dc;
+    border: 3rpx solid #f0c46a;
+    border-radius: 22rpx;
+    box-shadow: 0 5rpx 0 #f4e3ba;
+}
+
+.collect-on {
+    color: #ffffff;
+    background: #2f9e8f;
+    border-color: #278b7d;
+    box-shadow: 0 5rpx 0 #207a6e;
+}
+
+.collect-ico {
+    margin-right: 10rpx;
+    font-size: 24rpx;
+}
+
+/* 意象小画签 */
+.poem-illus {
+    box-sizing: border-box;
+    margin-bottom: 26rpx;
+    padding: 18rpx;
+    background: #fff8e6;
+    border: 3rpx solid #f0d79a;
+    border-radius: 30rpx;
+    box-shadow: 0 8rpx 0 #f4e3ba;
+}
+
+.illus-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16rpx;
+}
+
+.illus-badge {
+    padding: 6rpx 18rpx;
+    font-size: 21rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #e2604f;
+    border-radius: 18rpx;
+}
+
+/* 真实公有领域配图徽标：与生成图区分，提示「真迹/古画」 */
+.illus-badge-real {
+    background: #2f7d9e;
+}
+
+.illus-tag {
+    font-size: 22rpx;
+    font-weight: 700;
+    color: #8a6320;
+}
+
+.poem-illus-img {
+    display: block;
+    width: 100%;
+    border-radius: 22rpx;
+    background: #ffffff;
+}
+
+.poem-illus-note {
+    padding: 44rpx 24rpx;
+    text-align: center;
+    font-size: 28rpx;
+    font-weight: 800;
+    color: #8a6320;
+    background: #fff3dc;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 22rpx;
+}
+
+.poem-illus-caption {
+    display: block;
+    margin-top: 16rpx;
+    font-size: 24rpx;
+    font-weight: 700;
+    line-height: 1.6;
+    text-align: center;
+    color: #8a6320;
+}
+
+/* 真实图出处：小字、克制，不抢正文 */
+.poem-illus-credit {
+    display: block;
+    margin-top: 10rpx;
+    font-size: 19rpx;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: right;
+    color: #a98c4f;
+}
+
+/* 内容卡 */
+.poem-body,
+.poem-block {
+    box-sizing: border-box;
+    padding: 32rpx 30rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 28rpx;
+    box-shadow: 0 7rpx 0 #f4ead5;
+}
+
+.poem-block {
+    margin-top: 24rpx;
+}
+
+.poem-body {
+    text-align: center;
+}
+
+.poem-body .section-head {
+    justify-content: center;
+}
+
+.poem-lines {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16rpx;
+    padding: 20rpx 0;
+    background: #fffaf0;
+    border-radius: 20rpx;
+}
+
+.poem-line {
+    color: #2b3a35;
+    line-height: 1.9;
+    letter-spacing: 6rpx;
+}
+
+.poem-text {
+    display: block;
+    line-height: 1.9;
+    color: #3f5149;
+    letter-spacing: 1rpx;
+}
+
+.poem-foot {
+    margin-top: 40rpx;
+    text-align: center;
+    font-size: 22rpx;
+    color: #9aa39b;
+}
+
+/* 上一首 / 下一首 翻看 */
+.poem-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    margin-top: 30rpx;
+    padding: 14rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 26rpx;
+    box-shadow: 0 6rpx 0 #f4ead5;
+}
+
+.poem-nav-btn {
+    flex: 1;
+    text-align: center;
+    padding: 18rpx 0;
+    font-size: 27rpx;
+    font-weight: 800;
+    color: #2f9e8f;
+    background: #eaf6f1;
+    border-radius: 20rpx;
+}
+
+.poem-nav-next {
+    color: #d9862a;
+    background: #fff3dc;
+}
+
+.poem-nav-disabled {
+    color: #b9b3a4;
+    background: #f3f0e8;
+}
+
+.poem-nav-seq {
+    flex-shrink: 0;
+    padding: 0 20rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #8a8b80;
+}

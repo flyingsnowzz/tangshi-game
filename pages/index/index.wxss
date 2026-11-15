@@ -1,0 +1,866 @@
+/* 首页 · 少年国风：小书童迎宾 + 贴纸卡片 + 徽章关卡 */
+.home {
+    padding-top: 24rpx;
+}
+
+/* ---- 小书童迎宾横幅 ---- */
+.hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 24rpx 26rpx;
+    background: #fff3dc;
+    border: 3rpx solid #f0c46a;
+    border-radius: 32rpx;
+    box-shadow: 0 8rpx 0 #f6dfa9, 0 16rpx 30rpx rgba(190, 140, 40, 0.1);
+}
+
+.hero-mascot {
+    flex-shrink: 0;
+    width: 148rpx;
+    height: 148rpx;
+    border-radius: 28rpx;
+    background: #ffffff;
+    border: 3rpx solid #ffffff;
+    animation: float 3s ease-in-out infinite;
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    margin-left: 24rpx;
+}
+
+.hero-hi {
+    font-size: 24rpx;
+    color: #b07820;
+    letter-spacing: 1rpx;
+}
+
+.hero-title {
+    margin-top: 4rpx;
+    font-size: 46rpx;
+    font-weight: 800;
+    letter-spacing: 5rpx;
+    color: #2b3a35;
+}
+
+.hero-sub {
+    margin-top: 6rpx;
+    font-size: 22rpx;
+    color: #8a7b5c;
+    letter-spacing: 1rpx;
+}
+
+.hero-title-chip {
+    align-self: flex-start;
+    margin-top: 14rpx;
+    padding: 6rpx 20rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #2f9e8f;
+    border-radius: 22rpx;
+}
+
+.hero-seal {
+    position: absolute;
+    top: -14rpx;
+    right: -10rpx;
+}
+
+/* ---- 每日鼓励语气泡 ---- */
+.cheer-bubble {
+    display: flex;
+    align-items: center;
+    margin-top: 26rpx;
+    padding: 16rpx 22rpx;
+    background: #ffd66b;
+    border-radius: 30rpx;
+    box-shadow: 0 6rpx 0 #f0c14a;
+}
+
+.cheer-badge {
+    flex-shrink: 0;
+    padding: 6rpx 16rpx;
+    font-size: 21rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #e2604f;
+    border-radius: 18rpx;
+    margin-right: 18rpx;
+}
+
+.cheer-text {
+    flex: 1;
+    font-size: 26rpx;
+    font-weight: 700;
+    color: #7a5310;
+    line-height: 1.5;
+}
+
+/* ---- 概览：三色贴纸 ---- */
+.overview {
+    display: flex;
+    gap: 16rpx;
+    margin-top: 28rpx;
+}
+
+.overview-item {
+    flex: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24rpx 8rpx 22rpx;
+    border: 3rpx solid;
+    border-radius: 26rpx;
+}
+
+.overview-points {
+    background: #fff0e2;
+    border-color: #f6c99a;
+    box-shadow: 0 7rpx 0 #f6d9bd;
+}
+
+.overview-levels {
+    background: #e2f5ef;
+    border-color: #8fd3c4;
+    box-shadow: 0 7rpx 0 #c6ecdf;
+}
+
+.overview-signs {
+    background: #fff6d8;
+    border-color: #f0d79a;
+    box-shadow: 0 7rpx 0 #f7e8bd;
+}
+
+.overview-ico {
+    width: 46rpx;
+    height: 46rpx;
+    line-height: 46rpx;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 50%;
+    margin-bottom: 10rpx;
+}
+
+.overview-levels .overview-ico {
+    background: #2f9e8f;
+}
+
+.overview-signs .overview-ico {
+    background: #e2604f;
+}
+
+.overview-value {
+    font-size: 38rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    line-height: 1.2;
+}
+
+.overview-slash {
+    font-size: 24rpx;
+    font-weight: 600;
+    color: #9aa39b;
+}
+
+.overview-label {
+    margin-top: 8rpx;
+    font-size: 21rpx;
+    color: #7d857c;
+}
+
+/* ---- 继续闯关：竹青主色大卡 ---- */
+.next-card {
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 30rpx;
+    padding: 34rpx 28rpx 26rpx;
+    background: #2f9e8f;
+    border: 3rpx solid #278b7d;
+    border-radius: 32rpx;
+    box-shadow: 0 9rpx 0 #207a6e, 0 18rpx 34rpx rgba(32, 122, 110, 0.18);
+}
+
+.next-ribbon {
+    position: absolute;
+    top: -18rpx;
+    left: 28rpx;
+    padding: 6rpx 22rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #7a5310;
+    background: #ffd66b;
+    border: 3rpx solid #ffffff;
+    border-radius: 22rpx;
+    box-shadow: 0 4rpx 0 #e8b944;
+}
+
+.next-row {
+    display: flex;
+    align-items: center;
+}
+
+.next-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.next-eyebrow {
+    font-size: 22rpx;
+    color: #c9f0e5;
+    letter-spacing: 2rpx;
+}
+
+.next-name {
+    margin-top: 8rpx;
+    font-size: 40rpx;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 3rpx;
+}
+
+.next-desc {
+    margin-top: 10rpx;
+    font-size: 22rpx;
+    color: #d6f4ec;
+    line-height: 1.6;
+}
+
+.next-btn {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 116rpx;
+    height: 116rpx;
+    margin-left: 18rpx;
+    background: #ffd66b;
+    border: 3rpx solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 6rpx 0 #e0ad3c;
+}
+
+.next-btn-word {
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #8a5b12;
+    line-height: 1.2;
+}
+
+.next-btn-arrow {
+    margin-top: 2rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #e2604f;
+    line-height: 1.2;
+}
+
+.home-progress {
+    margin-top: 26rpx;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.home-progress .progress-fill {
+    background: #ffd66b;
+}
+
+.next-progress-tip {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 21rpx;
+    color: #d6f4ec;
+}
+
+/* ---- 今日一诗 ---- */
+.today-card {
+    display: flex;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+    margin-top: 28rpx;
+    padding: 18rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 28rpx;
+    box-shadow: 0 7rpx 0 #f4ead5;
+}
+
+.today-thumb {
+    flex-shrink: 0;
+    width: 132rpx;
+    height: 132rpx;
+    border-radius: 20rpx;
+    background: #f7f2e5;
+}
+
+/* 今日一诗图片两级降级都失败时的「诗」字签 */
+.today-thumb-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-size: 52rpx;
+    font-weight: 800;
+    color: #c9a227;
+    background: #fff3dc;
+    border: 3rpx dashed #f0c46a;
+}
+
+/* 真实图出处：缩略图底部浮层小字，不挤占横向布局 */
+.today-credit {
+    position: absolute;
+    left: 18rpx;
+    bottom: 14rpx;
+    max-width: 132rpx;
+    padding: 2rpx 6rpx;
+    font-size: 14rpx;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.42);
+    border-radius: 8rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.today-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20rpx;
+}
+
+.today-label {
+    font-size: 21rpx;
+    font-weight: 700;
+    color: #e2604f;
+    letter-spacing: 1rpx;
+}
+
+.today-title {
+    margin-top: 8rpx;
+    font-size: 32rpx;
+    font-weight: 800;
+    color: #2b3a35;
+}
+
+.today-author {
+    margin-top: 8rpx;
+    font-size: 21rpx;
+    color: #8a8b80;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.today-go {
+    flex-shrink: 0;
+    width: 60rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    text-align: center;
+    margin-left: 12rpx;
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 50%;
+    box-shadow: 0 5rpx 0 #d9862a;
+}
+
+/* ---- 诗库入口 ---- */
+.lib-entry {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin-top: 26rpx;
+    padding: 22rpx 22rpx 22rpx 24rpx;
+    background: #eaf6f1;
+    border: 3rpx solid #a9e0cd;
+    border-radius: 28rpx;
+    box-shadow: 0 7rpx 0 #cfeede;
+}
+
+.lib-entry-ico {
+    flex-shrink: 0;
+    width: 72rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    text-align: center;
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #2f9e8f;
+    border-radius: 20rpx;
+    box-shadow: 0 5rpx 0 #207a6e;
+    margin-right: 20rpx;
+}
+
+.lib-entry-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.lib-entry-title {
+    font-size: 28rpx;
+    font-weight: 800;
+    color: #2b3a35;
+}
+
+.lib-entry-desc {
+    margin-top: 6rpx;
+    font-size: 21rpx;
+    color: #5f8c7e;
+}
+
+.lib-entry-go {
+    flex-shrink: 0;
+    width: 60rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    text-align: center;
+    margin-left: 12rpx;
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #f5a340;
+    border-radius: 50%;
+    box-shadow: 0 5rpx 0 #d9862a;
+}
+
+/* ---- 诗签册收集进度 ---- */
+.sign-card {
+    box-sizing: border-box;
+    margin-top: 26rpx;
+    padding: 26rpx;
+    background: #fff8e6;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 28rpx;
+}
+
+.sign-head {
+    display: flex;
+    align-items: center;
+}
+
+.sign-badge {
+    flex-shrink: 0;
+    width: 72rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    text-align: center;
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #e2604f;
+    border-radius: 20rpx;
+    box-shadow: 0 5rpx 0 #be473c;
+    margin-right: 20rpx;
+}
+
+.sign-head-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-title {
+    font-size: 29rpx;
+    font-weight: 800;
+    color: #2b3a35;
+}
+
+.sign-desc {
+    margin-top: 6rpx;
+    font-size: 21rpx;
+    color: #8a7b5c;
+}
+
+.sign-count {
+    flex-shrink: 0;
+    font-size: 36rpx;
+    font-weight: 800;
+    color: #e2604f;
+}
+
+.sign-count-total {
+    font-size: 24rpx;
+    color: #a99a78;
+}
+
+/* 诗签册做成入口：可点 + 翻看按钮 */
+.sign-tappable {
+    transition: transform 0.12s ease;
+}
+
+.sign-tappable:active {
+    transform: scale(0.985);
+}
+
+.sign-go {
+    flex-shrink: 0;
+    margin-left: 16rpx;
+    padding: 8rpx 20rpx;
+    font-size: 21rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #e2604f;
+    border-radius: 20rpx;
+    box-shadow: 0 4rpx 0 #be473c;
+}
+
+.sign-track {
+    margin-top: 22rpx;
+    background: #f3e6c8;
+}
+
+.sign-fill {
+    background: linear-gradient(90deg, #f5a340, #ffd66b);
+}
+
+.sign-tip {
+    display: block;
+    margin-top: 14rpx;
+    font-size: 21rpx;
+    color: #a08a5e;
+}
+
+/* ---- 关卡梯度：彩色横幅 + 徽章 ---- */
+.tier-block {
+    margin-top: 44rpx;
+}
+
+.tier-banner {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 18rpx 22rpx;
+    border-radius: 26rpx;
+}
+
+.tier-qing {
+    background: #2f9e8f;
+    box-shadow: 0 7rpx 0 #207a6e;
+}
+
+.tier-dai {
+    background: #f5a340;
+    box-shadow: 0 7rpx 0 #d9862a;
+}
+
+.tier-zhu {
+    background: #5aa47e;
+    box-shadow: 0 7rpx 0 #438765;
+}
+
+.tier-hong {
+    background: #e2604f;
+    box-shadow: 0 7rpx 0 #be473c;
+}
+
+.tier-badge {
+    flex-shrink: 0;
+    width: 62rpx;
+    height: 62rpx;
+    line-height: 62rpx;
+    text-align: center;
+    font-size: 32rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    background: #ffffff;
+    border-radius: 18rpx;
+    margin-right: 20rpx;
+}
+
+.tier-banner-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tier-banner-name {
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 2rpx;
+}
+
+.tier-banner-sub {
+    margin-top: 4rpx;
+    font-size: 21rpx;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tier-banner-count {
+    flex-shrink: 0;
+    padding: 6rpx 18rpx;
+    font-size: 22rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    background: #ffffff;
+    border-radius: 20rpx;
+}
+
+.tier-track {
+    height: 12rpx;
+    margin-top: 16rpx;
+    background: #f3ead6;
+    border-radius: 12rpx;
+    overflow: hidden;
+}
+
+.tier-track-fill {
+    height: 100%;
+    border-radius: 12rpx;
+}
+
+.tier-fill-qing { background: #2f9e8f; }
+.tier-fill-dai { background: #f5a340; }
+.tier-fill-zhu { background: #5aa47e; }
+.tier-fill-hong { background: #e2604f; }
+
+.tier-desc {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 22rpx;
+    color: #8a8b80;
+    line-height: 1.6;
+}
+
+/* 40 关分档折叠：默认只展开正在闯的那一档 */
+.tier-toggle {
+    flex-shrink: 0;
+    margin-left: 12rpx;
+    padding: 6rpx 14rpx;
+    font-size: 20rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    background: rgba(255, 255, 255, 0.72);
+    border-radius: 18rpx;
+}
+
+.tier-collapsed {
+    margin-top: 20rpx;
+    padding: 26rpx 0;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 800;
+    color: #8a6320;
+    background: #fff3dc;
+    border: 3rpx dashed #f0c46a;
+    border-radius: 22rpx;
+}
+
+/* ---- 关卡卡片 ---- */
+.level-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18rpx;
+    margin-top: 20rpx;
+}
+
+.level-card {
+    box-sizing: border-box;
+    width: calc(50% - 9rpx);
+    padding: 22rpx 20rpx 20rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 26rpx;
+    box-shadow: 0 6rpx 0 #f4ead5;
+    animation: pop-in 320ms ease-out both;
+}
+
+.level-cleared {
+    background: #f0faf5;
+    border-color: #a9e0cd;
+    box-shadow: 0 6rpx 0 #d9f2e7;
+}
+
+.level-active {
+    background: #fffdf4;
+    border-color: #f5a340;
+    box-shadow: 0 6rpx 0 #f8e3b6;
+}
+
+.level-locked {
+    background: #f7f4ec;
+    border-color: #ede7d8;
+    box-shadow: 0 6rpx 0 #ece6d6;
+    opacity: 0.82;
+}
+
+.level-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48rpx;
+}
+
+.level-badge {
+    width: 56rpx;
+    height: 56rpx;
+    line-height: 56rpx;
+    text-align: center;
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #ffffff;
+    border-radius: 18rpx;
+}
+
+.level-badge-cleared {
+    background: #2f9e8f;
+    box-shadow: 0 4rpx 0 #207a6e;
+}
+
+.level-badge-active {
+    background: #f5a340;
+    box-shadow: 0 4rpx 0 #d9862a;
+}
+
+.level-badge-locked {
+    background: #cfc9ba;
+    box-shadow: 0 4rpx 0 #bcb5a4;
+}
+
+.level-state {
+    padding: 4rpx 14rpx;
+    font-size: 20rpx;
+    font-weight: 700;
+    border-radius: 18rpx;
+}
+
+.level-state-active {
+    color: #8a5b12;
+    background: #ffd66b;
+}
+
+.level-state-locked {
+    color: #9a9284;
+    background: #efe9db;
+}
+
+.level-name {
+    display: block;
+    margin-top: 18rpx;
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    letter-spacing: 2rpx;
+}
+
+.level-locked .level-name {
+    color: #8a8b80;
+}
+
+.level-count {
+    display: block;
+    margin-top: 10rpx;
+    font-size: 20rpx;
+    color: #8a8b80;
+    line-height: 1.5;
+}
+
+/* ---- 功能入口：彩色贴纸 ---- */
+.entry-head {
+    margin-top: 48rpx;
+}
+
+.entry-row {
+    display: flex;
+    gap: 16rpx;
+}
+
+.entry-item {
+    flex: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 26rpx 10rpx 22rpx;
+    border: 3rpx solid;
+    border-radius: 26rpx;
+}
+
+.entry-wrong {
+    background: #ffeae3;
+    border-color: #f3b8a9;
+    box-shadow: 0 7rpx 0 #f8d6cb;
+}
+
+.entry-profile {
+    background: #e2f5ef;
+    border-color: #8fd3c4;
+    box-shadow: 0 7rpx 0 #c6ecdf;
+}
+
+.entry-settings {
+    background: #fff6d8;
+    border-color: #f0d79a;
+    box-shadow: 0 7rpx 0 #f7e8bd;
+}
+
+.entry-ico {
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    text-align: center;
+    font-size: 28rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #e2604f;
+    border-radius: 20rpx;
+    margin-bottom: 14rpx;
+}
+
+.entry-profile .entry-ico {
+    background: #2f9e8f;
+}
+
+.entry-settings .entry-ico {
+    background: #f5a340;
+}
+
+.entry-name {
+    font-size: 26rpx;
+    font-weight: 800;
+    color: #2b3a35;
+}
+
+.entry-desc {
+    margin-top: 8rpx;
+    font-size: 20rpx;
+    color: #8a8b80;
+}
+
+/* ---- 页脚 ---- */
+.home-foot {
+    margin-top: 48rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.foot-line {
+    font-size: 21rpx;
+    color: #9aa39b;
+    line-height: 1.8;
+}

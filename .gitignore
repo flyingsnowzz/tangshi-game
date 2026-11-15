@@ -1,0 +1,16 @@
+# 依赖
+node_modules/
+
+# 微信开发者工具 / 本地隐私配置（含个人 openid、密钥等，禁止提交）
+.wbapp_*.privacy.json
+project.private.config.json
+
+# 系统 / 编辑器
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# 临时产物
+*.tmp
+*.swp

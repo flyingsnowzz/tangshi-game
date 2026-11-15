@@ -1,0 +1,102 @@
+<!-- 内容加载 / 异常：游客不拦截，直接进游戏 -->
+<view class="page-shell cloud-gate" wx:if="{{authState !== 'ready'}}">
+    <view class="cloud-emblem">诗</view>
+    <text class="cloud-title">唐诗闯关</text>
+    <block wx:if="{{authState === 'checking'}}">
+        <text class="cloud-note">正在打开诗卷…</text>
+    </block>
+    <block wx:else>
+        <text class="cloud-note cloud-note-error">{{cloudError}}</text>
+        <button class="btn-primary cloud-btn" bindtap="onCloudRetry">再试一次</button>
+    </block>
+</view>
+
+<view class="page-shell profile" wx:if="{{authState === 'ready'}}">
+
+    <!-- 我的称号：吉祥物 + 贴纸徽章 -->
+    <view class="profile-hero">
+        <image class="profile-mascot" src="{{mascotPath}}" mode="aspectFit" />
+        <view class="profile-hero-text">
+            <text class="profile-hero-hi">我现在的称号</text>
+            <text class="profile-title">{{titleName}}</text>
+            <text class="profile-desc">{{titleDesc}}</text>
+        </view>
+        <view class="seal seal-small profile-hero-seal">状</view>
+    </view>
+
+    <!-- 下一称号进度 -->
+    <view class="next-title" wx:if="{{nextName}}">
+        <view class="next-title-head">
+            <text class="next-title-label">下一个称号 · {{nextName}}</text>
+            <text class="next-title-need">{{nextNeed}}</text>
+        </view>
+        <view class="progress-track">
+            <view class="progress-fill" style="width:{{progress}}%"></view>
+        </view>
+        <text class="next-title-tip">再攒一点点就到手啦，当前完成 {{progress}}%</text>
+    </view>
+    <view class="top-title" wx:else>最高称号已经拿到手，继续刷新满星关卡吧！</view>
+
+    <!-- 数据贴纸 -->
+    <view class="section-head stat-head">
+        <text class="section-head-text">我的闯关战绩</text>
+    </view>
+
+    <view class="stat-grid">
+        <view class="stat-cell stat-c1">
+            <text class="stat-value">{{summary.clearedCount}}<text class="stat-slash">/{{totalLevels}}</text></text>
+            <text class="stat-label">通关关卡</text>
+        </view>
+        <view class="stat-cell stat-c2">
+            <text class="stat-value">{{summary.totalAnswers}}</text>
+            <text class="stat-label">累计答题</text>
+        </view>
+        <view class="stat-cell stat-c3">
+            <text class="stat-value">{{summary.accuracy}}<text class="stat-unit">%</text></text>
+            <text class="stat-label">首次正确率</text>
+        </view>
+        <view class="stat-cell stat-c4">
+            <text class="stat-value">{{summary.points}}</text>
+            <text class="stat-label">累计积分</text>
+        </view>
+        <view class="stat-cell stat-c5">
+            <text class="stat-value">{{summary.fullStarCount}}</text>
+            <text class="stat-label">满星关卡</text>
+        </view>
+        <view class="stat-cell stat-c6">
+            <text class="stat-value">{{collectedCount}}<text class="stat-slash">/{{poemTotal}}</text></text>
+            <text class="stat-label">诗签收集</text>
+        </view>
+    </view>
+
+    <view class="accuracy-box">
+        <view class="accuracy-row">
+            <text class="accuracy-text">首次就答对 {{summary.firstCorrect}} 题 / 共作答 {{summary.totalAnswers}} 次</text>
+            <text class="accuracy-rate">{{summary.accuracy}}%</text>
+        </view>
+        <view class="progress-track">
+            <view class="progress-fill" style="width:{{summary.accuracy}}%"></view>
+        </view>
+    </view>
+
+    <!-- 称号阶梯：徽章化 -->
+    <view class="section-head tier-head">
+        <text class="section-head-text">称号升级路</text>
+    </view>
+    <view class="tier-list">
+        <view class="tier-item" wx:for="{{tiers}}" wx:key="name">
+            <view class="tier-badge {{item.badgeClass}}">{{item.badgeWord}}</view>
+            <view class="tier-info">
+                <text class="tier-name {{item.reached ? 'tier-name-on' : ''}}">{{item.name}}</text>
+                <text class="tier-need">{{item.need}}</text>
+                <text class="tier-desc-tip">{{item.desc}}</text>
+            </view>
+            <text class="tier-state {{item.stateClass}}">{{item.stateText}}</text>
+        </view>
+    </view>
+
+    <button class="share-btn" open-type="share" bindtap="onShareTap">晒晒我的称号和战绩</button>
+    <view class="share-tip">在微信里打开就能转发给同学</view>
+
+    <view class="profile-reset" bindtap="resetAll">重置全部闯关进度</view>
+</view>

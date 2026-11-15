@@ -1,0 +1,72 @@
+.sheet-mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48rpx;
+    background: rgba(42, 48, 42, 0.55);
+}
+
+.sheet {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 48rpx 36rpx 32rpx;
+    background: #ffffff;
+    border: 4rpx solid #ffd66b;
+    border-radius: 36rpx;
+    box-shadow: 0 18rpx 50rpx rgba(42, 70, 62, 0.28);
+    text-align: center;
+    animation: sheet-in 260ms ease-out;
+}
+
+@keyframes sheet-in {
+    from { opacity: 0; transform: translateY(40rpx) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.sheet-badge {
+    width: 84rpx;
+    height: 84rpx;
+    line-height: 84rpx;
+    margin: -88rpx auto 20rpx;
+    background: #e2604f;
+    color: #fffaf0;
+    font-size: 40rpx;
+    border-radius: 26rpx;
+    border: 6rpx solid #ffffff;
+    box-shadow: 0 8rpx 18rpx rgba(226, 96, 79, 0.3);
+}
+
+.sheet-title {
+    display: block;
+    font-size: 42rpx;
+    font-weight: 800;
+    letter-spacing: 3rpx;
+    color: #2b3a35;
+}
+
+.sheet-desc {
+    display: block;
+    margin-top: 14rpx;
+    font-size: 26rpx;
+    line-height: 1.7;
+    color: #7b857e;
+}
+
+login-panel {
+    display: block;
+    width: 100%;
+    margin-top: 32rpx;
+}
+
+.sheet-skip {
+    margin-top: 28rpx;
+    font-size: 26rpx;
+    color: #8a8b80;
+    text-decoration: underline;
+}
