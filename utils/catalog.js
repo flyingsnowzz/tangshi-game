@@ -65,8 +65,11 @@ function reset() {
 
 /* ---------------- 题库 ---------------- */
 
-function getPoems() {
-  return cache ? cache.poems : [];
+/** 取题库；传 genre 时只返回该文体（shi=诗 / ci=词），不传返回全部（兼容旧调用） */
+function getPoems(genre) {
+  const list = cache ? cache.poems : [];
+  if (!genre) return list;
+  return list.filter(function (item) { return item.genre === genre || (!item.genre && genre === 'shi'); });
 }
 
 function getPoem(id) {
@@ -74,11 +77,14 @@ function getPoem(id) {
   return list.find(function (item) { return item.id === id; }) || null;
 }
 
-/** 按难度区间取诗；min 省略时从 1 开始，保证高难关卡不会抽到低难诗 */
-function getPoemsByDifficulty(maxDifficulty, minDifficulty) {
+/**
+ * 按难度区间取诗；min 省略时从 1 开始，保证高难关卡不会抽到低难诗。
+ * 传 genre 时只在该文体内抽题，避免唐诗关抽到宋词（分轨数据正确性）。
+ */
+function getPoemsByDifficulty(maxDifficulty, minDifficulty, genre) {
   const min = minDifficulty || 1;
   const max = maxDifficulty || 4;
-  return getPoems().filter(function (item) {
+  return getPoems(genre).filter(function (item) {
     return item.difficulty <= max && item.difficulty >= min;
   });
 }
@@ -90,12 +96,17 @@ function getAuthorIntro(name) {
 
 /* ---------------- 关卡 ---------------- */
 
-function getLevels() {
-  return cache ? cache.levels : [];
+/** 取关卡；传 genre 时只返回该文体。不传返回全部（首页平铺 7 档时用）。 */
+function getLevels(genre) {
+  const list = cache ? cache.levels : [];
+  if (!genre) return list;
+  return list.filter(function (item) { return item.genre === genre || (!item.genre && genre === 'shi'); });
 }
 
-function getTiers() {
-  return cache ? cache.tiers : [];
+function getTiers(genre) {
+  const list = cache ? cache.tiers : [];
+  if (!genre) return list;
+  return list.filter(function (item) { return item.genre === genre || (!item.genre && genre === 'shi'); });
 }
 
 function getTotalLevels() {
@@ -116,13 +127,24 @@ function getTierByIndex(index) {
   return tiers[index] || tiers[0] || { name: '唐诗闯关' };
 }
 
-function getGroupedLevels() {
-  return getTiers().map(function (tier, index) {
-    return {
-      tier: tier,
-      levels: getLevels().filter(function (item) { return item.tier === index; }),
-    };
+/**
+ * 关卡按档位分组。传 genre 时只看该文体。
+ * 用 tier 值直接对应 tiers 数组下标（tiers 顺序即 0..N-1），
+ * 这样宋词 tier=4/5/6 也能正确找到第 5/6/7 个 tier 配置。
+ */
+function getGroupedLevels(genre) {
+  const allTiers = getTiers();
+  const levels = getLevels(genre);
+  const tiers = genre ? allTiers.filter(function (t) {
+    return t.genre === genre || (!t.genre && genre === 'shi');
+  }) : allTiers;
+  const out = [];
+  tiers.forEach(function (tier) {
+    const idx = allTiers.indexOf(tier);
+    const groupLevels = levels.filter(function (item) { return item.tier === idx; });
+    if (groupLevels.length) out.push({ tier: tier, levels: groupLevels });
   });
+  return out;
 }
 
 /* ---------------- 配图 ---------------- */

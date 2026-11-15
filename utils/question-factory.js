@@ -228,7 +228,7 @@ function makeGuess(poem, levelId, index) {
   q.signature = poem.id + '|guess|' + brief;
   q.promptText = '根据诗意，选出对应的诗句';
   q.mainText = brief + '。';
-  q.subText = '出自哪一首唐诗？';
+  q.subText = '出自哪一首诗词？';
   q.options = built.options;
   q.answerKey = built.answerKey;
   q.tip = '这首诗是《' + poem.title + '》';
@@ -286,7 +286,7 @@ function makeImage(poem, levelId, index) {
   q.signature = poem.id + '|image|' + illus.motif;
   q.promptText = '看这幅小画，猜猜是哪句诗';
   q.mainText = '';
-  q.subText = '画里藏着一句唐诗';
+  q.subText = '画里藏着一句诗词';
   // 优先级：远程真实图（服务器 URL，不打包）→ 包内生成图（内联 data URI，预览/真机通用）→ 文字签。
   // 远程真实图加载失败时回退到生成图；两级都失败时页面显示意象文字签。
   var real = illus.real || '';
@@ -470,7 +470,9 @@ function makeByType(type, pool, levelId, index) {
  * 生成失败的题型自动换诗重试，最终兜底为上下句对答。
  */
 function buildQuestions(level) {
-  const pool = catalog.getPoemsByDifficulty(level.maxDifficulty, level.minDifficulty || 1);
+  // 按关卡所属文体抽题：唐诗关只出唐诗、宋词关只出宋词，避免跨轨串题。
+  const pool = catalog.getPoemsByDifficulty(
+    level.maxDifficulty, level.minDifficulty || 1, level.genre || 'shi');
   const plan = [];
   for (let i = 0; i < level.count; i += 1) {
     plan.push(level.types[i % level.types.length]);

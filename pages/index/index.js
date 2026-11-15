@@ -6,7 +6,8 @@ const { createCloudPage } = require('../../utils/cloud-page.js');
 
 // 吉祥物用内联图片数据，避免内置 H5 预览器解析不了包内绝对路径导致破图
 const MASCOT = require('../../utils/illustration-data.js').MASCOT;
-const TIER_WORDS = ['初', '进', '挑', '巅'];
+// 7 档字签：前 4 档唐诗，后 3 档宋词（词/苑/巅）
+const TIER_WORDS = ['初', '进', '挑', '巅', '词', '苑', '巅'];
 
 function starParts(stars) {
   const n = stars || 0;
