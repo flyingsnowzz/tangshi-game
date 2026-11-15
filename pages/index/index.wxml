@@ -34,7 +34,7 @@
     <!-- 文体切换：唐诗 / 宋词 / 古文 各走自己的档位与进度 -->
     <view class="genre-tabs">
         <view
-            class="genre-tab {{item.active ? 'genre-tab-on' : ''}}"
+            class="genre-tab {{tab.active ? 'genre-tab-on' : ''}}"
             wx:for="{{genreTabs}}"
             wx:key="key"
             wx:for-item="tab"
@@ -43,6 +43,8 @@
         >
             <text class="genre-tab-name">{{tab.label}}</text>
             <text class="genre-tab-count">{{tab.cleared}}/{{tab.total}} 关</text>
+            <!-- 选中还有形状线索（短白条），不只靠颜色区分 -->
+            <view class="genre-tab-mark {{tab.active ? 'genre-tab-mark-on' : ''}}"></view>
         </view>
     </view>
 

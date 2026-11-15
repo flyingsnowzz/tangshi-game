@@ -105,7 +105,7 @@
 /* ---- 文体切换：三个贴纸 Tab ---- */
 .genre-tabs {
     display: flex;
-    gap: 12rpx;
+    gap: 10rpx;
     margin-top: 26rpx;
     padding: 8rpx;
     background: #fdf1d8;
@@ -113,48 +113,69 @@
     border-radius: 30rpx;
 }
 
+/* 未选中：**不铺底色**。原先三个 Tab 都铺 #f7e6c4，和容器 #fdf1d8 几乎同色，
+   选中项只能靠一层金色去争，怎么看都糊。现在靠「着色 vs 留白」来区分。 */
 .genre-tab {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 14rpx 0 12rpx;
+    justify-content: center;
+    padding: 12rpx 0 10rpx;
     /* 边框常驻（未选中透明），切换时不会因为多出 3rpx 边框而抖动 */
     border: 3rpx solid transparent;
     border-radius: 24rpx;
-    background: #f7e6c4;
+    background: transparent;
 }
 
-/* 选中：实心暖金 + 白字 + 硬阴影。之前只加白底和细边框，
-   在 #fdf1d8 的浅底上几乎看不出，用户反馈「不清晰」就是这个原因。 */
+/* 选中：实心暖金 + 白字 + 深棕描边 + 硬阴影。
+   先给纯色兜底再叠渐变——预览器若不吃 gradient，也还是块实心金。 */
 .genre-tab-on {
-    background: linear-gradient(180deg, #f7b342 0%, #e28c16 100%);
-    border-color: #c9780c;
-    box-shadow: 0 5rpx 0 #c9780c, 0 10rpx 18rpx rgba(190, 120, 20, 0.26);
+    background: #eda01f;
+    background: linear-gradient(180deg, #f7b03a 0%, #dd8108 100%);
+    border-color: #a96305;
+    box-shadow: inset 0 2rpx 0 rgba(255, 255, 255, 0.5),
+        0 5rpx 0 #a96305,
+        0 10rpx 20rpx rgba(150, 90, 10, 0.3);
 }
 
 .genre-tab-name {
     font-size: 30rpx;
     font-weight: 800;
     letter-spacing: 3rpx;
-    color: #9c8a63;
+    color: #a8926a;
 }
 
 .genre-tab-on .genre-tab-name {
-    font-size: 32rpx;
+    font-size: 34rpx;
+    letter-spacing: 4rpx;
     color: #ffffff;
-    text-shadow: 0 2rpx 0 rgba(140, 80, 0, 0.4);
+    text-shadow: 0 2rpx 0 rgba(120, 65, 0, 0.45);
 }
 
 .genre-tab-count {
     margin-top: 4rpx;
     font-size: 21rpx;
-    color: #b8a279;
+    color: #c3b08c;
 }
 
 .genre-tab-on .genre-tab-count {
     color: #fff4dc;
     font-weight: 600;
+}
+
+/* 选中短白条：给色觉不便的人一条形状线索，也把「当前」说得更死 */
+.genre-tab-mark {
+    width: 30rpx;
+    height: 5rpx;
+    margin-top: 7rpx;
+    border-radius: 3rpx;
+    background: transparent;
+}
+
+.genre-tab-mark-on {
+    width: 46rpx;
+    background: #ffffff;
 }
 
 /* 概览：三色贴纸 */
