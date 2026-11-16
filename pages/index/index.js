@@ -87,6 +87,28 @@ createCloudPage({
     today: null,
     todayTriedFallback: false,
     todayImageFailed: false,
+    toastText: '',
+  },
+
+  /** 微信风格的居中图标提示：2 秒后自动收起，重复点击会重新计时 */
+  showCenterToast: function (text) {
+    const self = this;
+    if (this.centerToastTimer) {
+      clearTimeout(this.centerToastTimer);
+      this.centerToastTimer = null;
+    }
+    this.setData({ toastText: text });
+    this.centerToastTimer = setTimeout(function () {
+      self.centerToastTimer = null;
+      self.setData({ toastText: '' });
+    }, 2000);
+  },
+
+  onUnload: function () {
+    if (this.centerToastTimer) {
+      clearTimeout(this.centerToastTimer);
+      this.centerToastTimer = null;
+    }
   },
 
   onCloudRefresh: function () {
@@ -242,7 +264,7 @@ createCloudPage({
     const id = Number(event.currentTarget.dataset.id);
     const status = event.currentTarget.dataset.status;
     if (status === 'locked') {
-      wx.showToast({ title: '先过前面的关卡，就轮到它啦', icon: 'none' });
+      this.showCenterToast('先过前面的关卡，就轮到它啦');
       return;
     }
     wx.navigateTo({ url: '/pages/quiz/quiz?levelId=' + id });

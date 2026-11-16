@@ -203,3 +203,11 @@
         <text class="foot-line">答错不扣分，随时可以重来</text>
     </view>
 </view>
+
+<!-- 微信风格居中提示：锁定关卡等场景，带图标、2 秒自动消失 -->
+<view class="center-toast" wx:if="{{toastText}}">
+    <view class="center-toast-body">
+        <view class="center-toast-icon"></view>
+        <text class="center-toast-text">{{toastText}}</text>
+    </view>
+</view>
