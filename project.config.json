@@ -5,6 +5,18 @@
       {
         "type": "folder",
         "value": ".workbuddy"
+      },
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "suffix",
+        "value": ".md"
+      },
+      {
+        "type": "suffix",
+        "value": ".sh"
       }
     ],
     "include": []
