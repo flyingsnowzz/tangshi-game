@@ -38,8 +38,11 @@ createCloudPage({
     imageFailed: false,
     isChoice: true,
     isOrder: false,
+    isMultiFill: false,
     optionsView: [],
     orderView: [],
+    multiLinesView: [],
+    multiCardsView: [],
     orderPicks: [],
     leftView: [],
     rightView: [],
@@ -135,7 +138,7 @@ createCloudPage({
       return;
     }
     let answerText = '';
-    if (q.type === 'fill' || q.type === 'wf_fill') {
+    if (q.type === 'fill' || q.type === 'wf_fill' || q.type === 'multi_fill') {
       answerText = q.mainText;
     } else if (q.type === 'order') {
       answerText = q.orderText || '';
@@ -144,8 +147,8 @@ createCloudPage({
       answerText = correct ? correct.text : '';
     }
     const view = Object.assign({}, q, {
-      // 填空类（含文言填空）题干用 masked，正文另作答案展示，不在此重复显示
-      displayMain: q.type === 'fill' || q.type === 'wf_fill' ? '' : q.mainText,
+      // 填空类（含文言填空、多空填字）题干用挖空句，正文另作答案展示，不在此重复显示
+      displayMain: q.type === 'fill' || q.type === 'wf_fill' || q.type === 'multi_fill' ? '' : q.mainText,
       // 挖空句的展示版（带句读）；老题库没有 maskedView 时退回 masked
       displayMasked: q.maskedView || q.masked,
       displayVerse: q.type === 'next' || q.type === 'author' || q.type === 'title',
@@ -162,8 +165,15 @@ createCloudPage({
       imageCredit: view.imageCredit || '',
       imageTriedFallback: false,
       imageFailed: false,
-      isChoice: q.type !== 'match' && q.type !== 'order',
+      isChoice: q.type !== 'match' && q.type !== 'order' && q.type !== 'multi_fill',
       isOrder: q.type === 'order',
+      isMultiFill: q.type === 'multi_fill',
+      multiLinesView: q.multiLines.map(function (item) {
+        return { idx: item.idx, before: item.before, after: item.after, punct: item.punct, filled: '', state: '' };
+      }),
+      multiCardsView: q.multiCards.map(function (item) {
+        return { key: item.key, text: item.text, used: false, wrong: false };
+      }),
       optionsView: q.options.map(function (item) {
         return { key: item.key, text: item.text, state: 'plain' };
       }),
@@ -322,6 +332,97 @@ createCloudPage({
       matchHint: '',
       isWrong: false,
     });
+  },
+
+  /**
+   * 多空填字：点字卡填入第一个未填的空；填满四格自动判题。
+   * 交互参照截图——字卡与空一一对应，不做四选一。
+   */
+  onMultiCardTap: function (event) {
+    if (this.data.showResult) return;
+    const key = event.currentTarget.dataset.key;
+    const card = this.data.multiCardsView.find(function (item) { return item.key === key; });
+    if (!card || card.used) return;
+
+    const slotIndex = this.data.multiLinesView.findIndex(function (item) { return !item.filled; });
+    if (slotIndex < 0) return;
+    const lines = this.data.multiLinesView.map(function (item, i) {
+      return Object.assign({}, item, {
+        filled: i === slotIndex ? card.text : item.filled,
+        state: i === slotIndex ? 'filled' : item.state,
+      });
+    });
+    const cards = this.data.multiCardsView.map(function (item) {
+      return Object.assign({}, item, { used: item.key === key ? true : item.used, wrong: false });
+    });
+    const allFilled = lines.every(function (item) { return !!item.filled; });
+    this.setData({ multiLinesView: lines, multiCardsView: cards, matchHint: allFilled ? '' : '已填 ' + lines.filter(function (i) { return !!i.filled; }).length + '/4，接着填' });
+    if (allFilled) this.judgeMultiFill();
+  },
+
+  /** 多空填字：点已填的空撤回字卡，可重新安排 */
+  onMultiSlotTap: function (event) {
+    if (this.data.showResult) return;
+    const idx = Number(event.currentTarget.dataset.index);
+    const slot = this.data.multiLinesView[idx];
+    if (!slot || !slot.filled) return;
+    const text = slot.filled;
+    const lines = this.data.multiLinesView.map(function (item, i) {
+      return Object.assign({}, item, { filled: i === idx ? '' : item.filled, state: i === idx ? '' : item.state });
+    });
+    const cards = this.data.multiCardsView.map(function (item) {
+      return Object.assign({}, item, { used: item.text === text ? false : item.used, wrong: false });
+    });
+    this.setData({ multiLinesView: lines, multiCardsView: cards, matchHint: '取回一个字，换个位置试试', isWrong: false });
+  },
+
+  /** 多空填字：四格填满后逐空判定，全对才过关 */
+  judgeMultiFill: function () {
+    const q = this.data.current;
+    const answers = q.multiLines || [];
+    const filled = this.data.multiLinesView;
+    const wrongIndexes = [];
+    filled.forEach(function (item, i) {
+      if (item.filled !== answers[i].answer) wrongIndexes.push(i);
+    });
+    if (!wrongIndexes.length) {
+      const combo = this.data.combo + 1;
+      const patch = {
+        combo: combo,
+        comboText: combo >= 2 ? '连对 ' + combo + ' 题，太顺啦！' : '',
+        showResult: true,
+        isWrong: false,
+        feedback: q.correctFeedback || '四个字都填对啦！',
+        matchHint: '',
+        multiLinesView: filled.map(function (item) { return Object.assign({}, item, { state: 'right' }); }),
+      };
+      if (!this.data.questionHadWrong) {
+        patch.firstCorrect = this.data.firstCorrect + 1;
+        if (this.data.mode === 'wrong') {
+          patch.masteredSignatures = this.data.masteredSignatures.concat([q.signature]);
+        }
+      }
+      this.setData(patch);
+      playCorrect();
+      return;
+    }
+    this.setData({
+      multiLinesView: filled.map(function (item, i) {
+        return Object.assign({}, item, { state: wrongIndexes.indexOf(i) >= 0 ? 'wrong' : 'filled' });
+      }),
+      multiCardsView: this.data.multiCardsView.map(function (item) {
+        return Object.assign({}, item, { wrong: wrongIndexes.some(function (i) { return filled[i].filled === item.text; }) });
+      }),
+      matchHint: '有 ' + wrongIndexes.length + ' 个字没放回位置，点一下空就能取回',
+      combo: 0,
+      comboText: '',
+      isWrong: true,
+      questionHadWrong: true,
+      wrongCount: this.data.wrongCount + 1,
+      feedback: '差一点点，再看看',
+    });
+    store.recordWrong(q);
+    playWrong();
   },
 
   onLeftTap: function (event) {

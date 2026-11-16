@@ -5,7 +5,7 @@
  *
  * 题型分两类：
  *   单选类 fill / next / guess / image / author / title / feihua / odd —— 页面复用四选一交互
- *   操作类 match（配对）/ order（排序）—— 页面各自有独立交互分支
+ *   操作类 match（配对）/ order（排序）/ multi_fill（多空填字）—— 页面各自有独立交互分支
  *
  * 古文五型（genre=wen 专用，基于 cards 而非 lines，同为四选一）：
  *   pause 诵读断句 / word 实词释义 / wf_fill 文言填空 / trans 名句翻译 / read 文意理解
@@ -24,6 +24,8 @@ const TYPE_NAMES = {
   title: '猜诗名',
   feihua: '飞花令',
   odd: '火眼金睛',
+  // 多空填字：整首诗挖四个单字，字卡一一回填（诗词专用）
+  multi_fill: '多空填字',
   // 古文专用五型
   trans: '文句翻译',
   word: '实词释义',
@@ -166,6 +168,10 @@ function baseQuestion(levelId, index, type, poem) {
     orderItems: [],
     answerOrder: [],
     orderText: '',
+    // 多空填字：挖空后的整首诗（按行）+ 字卡。逐空判定所需数据全在题对象里，
+    // 错题本整题序列化后也能原样重做。
+    multiLines: [],
+    multiCards: [],
   };
 }
 
@@ -250,6 +256,60 @@ function makeFill(poem, levelId, index) {
   q.options = built.options;
   q.answerKey = built.answerKey;
   q.tip = '缺失处的第一个字是「' + blank.charAt(0) + '」';
+  return q;
+}
+
+/**
+ * 多空填字：整篇四句各挖一个单字，四张字卡一一回填。
+ * 与「选字填空」的区别：后者只挖连续两字、四选一单选；本题是四空全填、
+ * 逐空判定，考察整篇记忆而非局部辨析。
+ *
+ * 四个答案字必须互不相同，否则字卡与空位无法一一对应；取不到就返回 null，
+ * 由 buildQuestions 换诗重试。
+ */
+function makeMultiFill(poem, levelId, index) {
+  const lines = (poem.lines || []).slice(0, 4);
+  if (lines.length < 4 || lines.some(function (line) { return line.length < 3; })) return null;
+
+  let slots = null;
+  for (let attempt = 0; attempt < 30 && !slots; attempt += 1) {
+    const used = {};
+    const picked = [];
+    lines.forEach(function (line, i) {
+      const positions = [];
+      for (let p = 0; p < line.length; p += 1) {
+        if (!used[line.charAt(p)]) positions.push(p);
+      }
+      if (!positions.length) return;
+      const pos = positions[randInt(positions.length)];
+      const answer = line.charAt(pos);
+      used[answer] = true;
+      const masked = line.slice(0, pos) + '□' + line.slice(pos + 1);
+      const parts = masked.split('□');
+      picked.push({
+        idx: i,
+        before: parts[0],
+        after: parts[1] || '',
+        punct: punctAt(poem, i),
+        answer: answer,
+      });
+    });
+    if (picked.length === 4) slots = picked;
+  }
+  if (!slots) return null;
+
+  const answers = slots.map(function (s) { return s.answer; });
+  const q = baseQuestion(levelId, index, 'multi_fill', poem);
+  q.signature = poem.id + '|multi_fill|' + answers.join('');
+  q.promptText = '把四个字填回诗里，补全这一篇';
+  q.multiLines = slots;
+  q.multiCards = shuffle(answers).map(function (ch, i) {
+    return { key: 'm' + i, text: ch };
+  });
+  q.mainText = lines.map(function (line, i) { return line + punctAt(poem, i); }).join('');
+  q.subText = '《' + poem.title + '》 · ' + poem.author;
+  q.tip = '第一处空填「' + answers[0] + '」';
+  q.correctFeedback = '四个字都填对啦，这一篇记住了！';
   return q;
 }
 
@@ -722,6 +782,7 @@ function makeByType(type, pool, levelId, index) {
   if (!pool.length) return null;
   const poem = pool[randInt(pool.length)];
   if (type === 'fill') return makeFill(poem, levelId, index);
+  if (type === 'multi_fill') return makeMultiFill(poem, levelId, index);
   if (type === 'guess') return makeGuess(poem, levelId, index);
   if (type === 'image') return makeImage(poem, levelId, index);
   if (type === 'order') return makeOrder(poem, levelId, index);
@@ -730,6 +791,28 @@ function makeByType(type, pool, levelId, index) {
   if (type === 'feihua') return makeFeihua(poem, levelId, index);
   if (type === 'odd') return makeOdd(poem, pool, levelId, index);
   return makeNext(poem, levelId, index);
+}
+
+/**
+ * 诗词关注入多空填字：从题型计划里拿掉一个「重复出现」的题位换成本题型，
+ * 保证每种已配置题型仍至少出现一次、题量不变。
+ *
+ * 为什么不在云端 levels.types 里加：关卡配置在生产库，改它要重新导数据；
+ * 这里在出题侧注入，新题型随代码发布即可生效，且云端日后显式配置了
+ * multi_fill 时本函数自动让位，不会重复出题。
+ */
+function injectMultiFill(plan) {
+  if (plan.length < 5 || plan.indexOf('multi_fill') >= 0) return plan;
+  const counts = {};
+  plan.forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+  const dup = plan.find(function (t) { return counts[t] > 1; });
+  if (!dup) return plan;
+  let seen = 0;
+  return plan.map(function (t) {
+    if (t !== dup) return t;
+    seen += 1;
+    return seen === 2 ? 'multi_fill' : t;
+  });
 }
 
 /**
@@ -744,10 +827,11 @@ function buildQuestions(level) {
   for (let i = 0; i < level.count; i += 1) {
     plan.push(level.types[i % level.types.length]);
   }
-  const ordered = shuffle(plan);
+  // 古文关不用 lines，跳过注入；诗词关每关注入一题多空填字
+  const isWen = level.genre === 'wen';
+  const ordered = shuffle(isWen ? plan : injectMultiFill(plan));
   const list = [];
 
-  const isWen = level.genre === 'wen';
   ordered.forEach(function (type, index) {
     let q = null;
     for (let attempt = 0; attempt < 20 && !q; attempt += 1) {

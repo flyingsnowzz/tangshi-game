@@ -40,6 +40,14 @@
         <view class="q-verse" wx:if="{{current.type === 'fill' || current.type === 'wf_fill'}}">
             <text class="q-masked" style="font-size:{{poemFs}}rpx">{{current.displayMasked}}</text>
         </view>
+        <!-- 多空填字：整篇四句各挖一字，点空可撤回 -->
+        <view class="q-verse mf-verse" wx:elif="{{current.type === 'multi_fill'}}">
+            <view class="mf-line" wx:for="{{multiLinesView}}" wx:key="idx" data-index="{{index}}" bindtap="onMultiSlotTap">
+                <text class="mf-text" style="font-size:{{poemFs}}rpx">{{item.before}}</text>
+                <text class="mf-blank mf-blank-{{item.state}}" style="font-size:{{poemFs}}rpx">{{item.filled || '□'}}</text>
+                <text class="mf-text" style="font-size:{{poemFs}}rpx">{{item.after}}{{item.punct}}</text>
+            </view>
+        </view>
         <view class="q-verse" wx:elif="{{current.displayVerse}}">
             <text style="font-size:{{poemFs}}rpx">{{current.displayMain}}</text>
         </view>
@@ -80,6 +88,17 @@
             <text class="option-text" style="font-size:{{bodyFs}}rpx">{{item.text}}</text>
         </view>
         <view class="order-reset" wx:if="{{!showResult}}" bindtap="onOrderReset">重排一次</view>
+    </view>
+
+    <!-- 多空填字：四张字卡，点一张填入第一个空 -->
+    <view class="mf-cards" wx:elif="{{isMultiFill}}">
+        <view
+            class="mf-card {{item.used ? 'mf-card-used' : ''}} {{item.wrong ? 'mf-card-wrong' : ''}}"
+            wx:for="{{multiCardsView}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="onMultiCardTap"
+        >{{item.text}}</view>
     </view>
 
     <!-- 配对题 -->

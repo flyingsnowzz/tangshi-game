@@ -82,6 +82,56 @@
     font-weight: 700;
 }
 
+/* 多空填字：整篇四句，逐句一个空位 */
+.mf-verse {
+    padding: 22rpx 0 18rpx;
+}
+
+.mf-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    line-height: 2.1;
+}
+
+.mf-text {
+    color: #2b3a35;
+    letter-spacing: 4rpx;
+}
+
+.mf-blank {
+    display: inline-block;
+    box-sizing: border-box;
+    min-width: 1.9em;
+    margin: 0 14rpx;
+    padding: 0 6rpx;
+    text-align: center;
+    font-weight: 800;
+    color: #e2604f;
+    border: 3rpx solid #e9b95c;
+    border-radius: 10rpx;
+    background: #fffaf0;
+}
+
+.mf-blank-filled {
+    color: #1f7a5c;
+    border-color: #57b995;
+    background: #e6f7ef;
+}
+
+.mf-blank-wrong {
+    color: #d94636;
+    border-color: #e2604f;
+    background: #ffe8e3;
+}
+
+.mf-blank-right {
+    color: #1f7a5c;
+    border-color: #57b995;
+    background: #dcf3e7;
+}
+
 .q-meaning {
     margin: 28rpx 0 20rpx;
     padding: 18rpx 20rpx;
@@ -261,6 +311,42 @@
     background: #fff3dc;
     border: 3rpx dashed #f0c46a;
     border-radius: 30rpx;
+}
+
+/* 多空填字：字卡横排，点一张填入下一个空 */
+.mf-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18rpx;
+    margin-top: 28rpx;
+}
+
+.mf-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 120rpx;
+    height: 120rpx;
+    font-size: 52rpx;
+    font-weight: 800;
+    color: #8a4a12;
+    background: #fff3dc;
+    border: 3rpx solid #e8b95c;
+    border-radius: 20rpx;
+    box-shadow: 0 6rpx 0 #e0c186;
+}
+
+.mf-card-used {
+    opacity: 0.35;
+    box-shadow: none;
+}
+
+.mf-card-wrong {
+    color: #d94636;
+    border-color: #e2604f;
+    background: #ffe8e3;
 }
 
 /* 配对题 */
