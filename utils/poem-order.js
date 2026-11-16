@@ -13,11 +13,14 @@ const GRADE_RANK = {
   '小学低年级': 0,
   '小学中高年级': 1,
   '初中': 2,
-  '高中拓展': 3,
+  // 古文里有一批学段标为「高中」（如《烛之武退秦师》），
+  // 排在「高中拓展」之前；两者同属高中阶段，不能再落到 99 被甩到最后
+  '高中': 3,
+  '高中拓展': 4,
 };
 
 // 筛选条上展示学段的固定顺序；只显示题库里实际出现的学段
-const GRADE_ORDER = ['小学低年级', '小学中高年级', '初中', '高中拓展'];
+const GRADE_ORDER = ['小学低年级', '小学中高年级', '初中', '高中', '高中拓展'];
 
 function gradeRank(grade) {
   return Object.prototype.hasOwnProperty.call(GRADE_RANK, grade) ? GRADE_RANK[grade] : 99;
@@ -58,6 +61,11 @@ function gradeFilters() {
   const out = [{ key: 'all', name: '全部' }];
   GRADE_ORDER.forEach(function (g) {
     if (present[g]) out.push({ key: g, name: g });
+  });
+  // 兜底：题库里出现、但固定顺序表未定义的学段也要给筛选入口，
+  // 否则这批篇目只能在「全部」里看到，无法按学段筛出
+  Object.keys(present).forEach(function (g) {
+    if (g && GRADE_ORDER.indexOf(g) < 0) out.push({ key: g, name: g });
   });
   return out;
 }
