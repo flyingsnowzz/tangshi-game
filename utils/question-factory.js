@@ -282,7 +282,9 @@ function buildMultiFill(poem, sentences, levelId, index) {
       const line = sentence.text;
       const positions = [];
       for (let p = 0; p < line.length; p += 1) {
-        if (!used[line.charAt(p)]) positions.push(p);
+        const ch = line.charAt(p);
+        // 只挖汉字：古文正文里偶有书名号 / 引号等符号，挖出来会变成无效字卡
+        if (!used[ch] && /[\u4e00-\u9fa5]/.test(ch)) positions.push(p);
       }
       if (!positions.length) return;
       const pos = positions[randInt(positions.length)];

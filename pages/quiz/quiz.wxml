@@ -136,7 +136,9 @@
         <text class="feedback-line" wx:if="{{current.answerText}}" style="font-size:{{poemFs}}rpx">{{current.answerText}}</text>
     </view>
 
-    <view class="combo-tip" wx:if="{{comboText && !isWrong}}">{{comboText}}</view>
+    <view class="combo-tip" wx:if="{{comboText && !isWrong}}">
+        <text class="combo-tip-inner">{{comboText}}</text>
+    </view>
 
     <!-- 提示 -->
     <view class="tip-box" wx:if="{{tipVisible}}">

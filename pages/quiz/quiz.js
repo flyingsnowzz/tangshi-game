@@ -67,6 +67,29 @@ createCloudPage({
     fallback: null,
   },
 
+  /** 连对提示：屏幕上侧浮层，2.5 秒后自动收起；切题 / 离页立即清理 */
+  clearComboTimer: function () {
+    if (this.comboTimer) {
+      clearTimeout(this.comboTimer);
+      this.comboTimer = null;
+    }
+  },
+
+  /** 在每个判题分支 setData 后调用：文案已写入 data，这里只负责 2.5 秒后收起 */
+  armComboTimer: function () {
+    this.clearComboTimer();
+    if (!this.data.comboText) return;
+    const self = this;
+    this.comboTimer = setTimeout(function () {
+      self.comboTimer = null;
+      self.setData({ comboText: '' });
+    }, 2500);
+  },
+
+  onUnload: function () {
+    this.clearComboTimer();
+  },
+
   /** 只在云端内容 + 进度就绪后执行一次，避免返回页面时重新生成题目 */
   onCloudFirst: function (options) {
     const settings = store.getSettings();
@@ -132,6 +155,7 @@ createCloudPage({
   },
 
   showQuestion: function (index) {
+    this.clearComboTimer();
     const q = this.data.questions[index];
     if (!q) {
       this.finish();
@@ -243,6 +267,7 @@ createCloudPage({
         }
       }
       this.setData(patch);
+      this.armComboTimer();
       playCorrect();
     } else {
       this.setData({
@@ -255,6 +280,7 @@ createCloudPage({
         feedback: '差一点点，再试一次就好啦',
         optionsView: optionsView,
       });
+      this.clearComboTimer();
       store.recordWrong(q);
       playWrong();
     }
@@ -302,6 +328,7 @@ createCloudPage({
         }
       }
       this.setData(patch);
+      this.armComboTimer();
       playCorrect();
     } else {
       this.setData({
@@ -317,6 +344,7 @@ createCloudPage({
         wrongCount: this.data.wrongCount + 1,
         feedback: '差一点点，再试一次就好啦',
       });
+      this.clearComboTimer();
       store.recordWrong(q);
       playWrong();
     }
@@ -403,6 +431,7 @@ createCloudPage({
         }
       }
       this.setData(patch);
+      this.armComboTimer();
       playCorrect();
       return;
     }
@@ -421,6 +450,7 @@ createCloudPage({
       wrongCount: this.data.wrongCount + 1,
       feedback: '差一点点，再看看',
     });
+    this.clearComboTimer();
     store.recordWrong(q);
     playWrong();
   },
@@ -482,6 +512,7 @@ createCloudPage({
         }
       }
       this.setData(patch);
+      this.armComboTimer();
       if (done) playCorrect();
     } else {
       this.setData({
@@ -499,6 +530,7 @@ createCloudPage({
           };
         }),
       });
+      this.clearComboTimer();
       store.recordWrong(q);
       playWrong();
     }

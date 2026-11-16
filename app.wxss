@@ -444,17 +444,37 @@ button::after {
     box-shadow: 0 6rpx 0 #be473c;
 }
 
-/* ---- 答题页：连对鼓励 ---- */
+/* ---- 答题页：连对鼓励（屏幕上侧浮层，不占底部按钮位置） ---- */
 .combo-tip {
-    margin: 20rpx auto 0;
-    padding: 12rpx 30rpx;
-    width: fit-content;
+    position: fixed;
+    top: 24rpx;
+    left: 0;
+    right: 0;
+    z-index: 80;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+.combo-tip-inner {
+    box-sizing: border-box;
+    display: inline-block;
+    max-width: 80vw;
+    padding: 14rpx 34rpx;
     font-size: 27rpx;
     font-weight: 800;
+    text-align: center;
     color: #8a6320;
     background: #ffd66b;
-    border-radius: 30rpx;
-    animation: star-pop 380ms ease-out;
+    border: 2rpx solid rgba(138, 99, 32, 0.16);
+    border-radius: 40rpx;
+    box-shadow: 0 10rpx 28rpx rgba(90, 64, 20, 0.18);
+    animation: combo-float 2.5s ease-out forwards;
+}
+@keyframes combo-float {
+    0% { opacity: 0; transform: translateY(-16rpx) scale(0.9); }
+    12% { opacity: 1; transform: translateY(0) scale(1); }
+    78% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-8rpx) scale(0.98); }
 }
 
 /* ---- 动效 ---- */
