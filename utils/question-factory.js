@@ -260,22 +260,26 @@ function makeFill(poem, levelId, index) {
 }
 
 /**
- * 多空填字：整篇四句各挖一个单字，四张字卡一一回填。
+ * 多空填字：四句各挖一个单字，四张字卡一一回填。
  * 与「选字填空」的区别：后者只挖连续两字、四选一单选；本题是四空全填、
  * 逐空判定，考察整篇记忆而非局部辨析。
  *
- * 四个答案字必须互不相同，否则字卡与空位无法一一对应；取不到就返回 null，
- * 由 buildQuestions 换诗重试。
+ * 诗词用 lines + marks，古文用 card.text 按标点切出的句子，共用同一套挖空逻辑。
+ * 四个答案字必须互不相同，否则字卡与空位无法一一对应；取不到返回 null，
+ * 由 buildQuestions 换篇重试。
+ *
+ * @param sentences [{ text: 白文句, punct: 该句标点 }]，至少四句
  */
-function makeMultiFill(poem, levelId, index) {
-  const lines = (poem.lines || []).slice(0, 4);
-  if (lines.length < 4 || lines.some(function (line) { return line.length < 3; })) return null;
+function buildMultiFill(poem, sentences, levelId, index) {
+  const lines = sentences.slice(0, 4);
+  if (lines.length < 4 || lines.some(function (s) { return s.text.length < 3; })) return null;
 
   let slots = null;
   for (let attempt = 0; attempt < 30 && !slots; attempt += 1) {
     const used = {};
     const picked = [];
-    lines.forEach(function (line, i) {
+    lines.forEach(function (sentence, i) {
+      const line = sentence.text;
       const positions = [];
       for (let p = 0; p < line.length; p += 1) {
         if (!used[line.charAt(p)]) positions.push(p);
@@ -284,13 +288,11 @@ function makeMultiFill(poem, levelId, index) {
       const pos = positions[randInt(positions.length)];
       const answer = line.charAt(pos);
       used[answer] = true;
-      const masked = line.slice(0, pos) + '□' + line.slice(pos + 1);
-      const parts = masked.split('□');
       picked.push({
         idx: i,
-        before: parts[0],
-        after: parts[1] || '',
-        punct: punctAt(poem, i),
+        before: line.slice(0, pos),
+        after: line.slice(pos + 1),
+        punct: sentence.punct,
         answer: answer,
       });
     });
@@ -301,15 +303,51 @@ function makeMultiFill(poem, levelId, index) {
   const answers = slots.map(function (s) { return s.answer; });
   const q = baseQuestion(levelId, index, 'multi_fill', poem);
   q.signature = poem.id + '|multi_fill|' + answers.join('');
-  q.promptText = '把四个字填回诗里，补全这一篇';
+  q.promptText = '把四个字填回原文里，补全这一篇';
   q.multiLines = slots;
   q.multiCards = shuffle(answers).map(function (ch, i) {
     return { key: 'm' + i, text: ch };
   });
-  q.mainText = lines.map(function (line, i) { return line + punctAt(poem, i); }).join('');
-  q.subText = '《' + poem.title + '》 · ' + poem.author;
+  q.mainText = lines.map(function (s) { return s.text + s.punct; }).join('');
+  q.subText = '《' + poem.title + '》 · ' + (poem.author || '');
   q.tip = '第一处空填「' + answers[0] + '」';
   q.correctFeedback = '四个字都填对啦，这一篇记住了！';
+  return q;
+}
+
+/** 诗词版：lines 白文 + marks 逐句标点 */
+function makeMultiFill(poem, levelId, index) {
+  const sentences = (poem.lines || []).map(function (line, i) {
+    return { text: line, punct: punctAt(poem, i) };
+  });
+  return buildMultiFill(poem, sentences, levelId, index);
+}
+
+/**
+ * 古文版：card.text 自带标点，按标点切成「白文句 + 原标点」。
+ * 古文的句子长短不齐，标点前的正文不足 3 字时跳过，保证挖空后仍有上下文。
+ */
+function makeWenMultiFill(pick, levelId, index) {
+  const all = [];
+  (pick.poem.cards || []).forEach(function (card) {
+    const text = (card && card.text) || '';
+    let cur = '';
+    for (let i = 0; i < text.length; i += 1) {
+      const ch = text.charAt(i);
+      cur += ch;
+      if ('，。？！；：'.indexOf(ch) >= 0) {
+        const body = cur.slice(0, -1);
+        if (body.length >= 3) all.push({ text: body, punct: ch });
+        cur = '';
+      }
+    }
+    if (cur.length >= 3) all.push({ text: cur, punct: '' });
+  });
+  if (all.length < 4) return null;
+  // 从可切句里随机取四句（分片打乱，避免总挖同一篇的开头）
+  const chosen = sample(all, 4);
+  const q = buildMultiFill(pick.poem, chosen, levelId, index);
+  if (q) q.subText = '《' + pick.poem.title + '》 · 古文名句';
   return q;
 }
 
@@ -758,7 +796,9 @@ function makePause(pick, levelId, index) {
   return q;
 }
 
-const WEN_TYPES = { trans: 1, read: 1, word: 1, wf_fill: 1, pause: 1 };
+// multi_fill 也在内：否则古文多空题会掉到下面的诗词分支，
+// 误用古文 poem.lines（带标点的兜底原文）导致挖到「，」等标点
+const WEN_TYPES = { trans: 1, read: 1, word: 1, wf_fill: 1, pause: 1, multi_fill: 1 };
 
 /** 取抽题池范围内的古文卡片 */
 function wenCardsInPool(pool) {
@@ -778,6 +818,7 @@ function makeByType(type, pool, levelId, index) {
     if (type === 'word') return makeWord(pick, levelId, index);
     if (type === 'wf_fill') return makeWenFill(pick, levelId, index);
     if (type === 'pause') return makePause(pick, levelId, index);
+    if (type === 'multi_fill') return makeWenMultiFill(pick, levelId, index);
   }
   if (!pool.length) return null;
   const poem = pool[randInt(pool.length)];
@@ -794,8 +835,8 @@ function makeByType(type, pool, levelId, index) {
 }
 
 /**
- * 诗词关注入多空填字：从题型计划里拿掉一个「重复出现」的题位换成本题型，
- * 保证每种已配置题型仍至少出现一次、题量不变。
+ * 各关注入多空填字：从题型计划里拿掉一个「重复出现」的题位换成本题型，
+ * 保证每种已配置题型仍至少出现一次、题量不变。诗词与古文关均适用。
  *
  * 为什么不在云端 levels.types 里加：关卡配置在生产库，改它要重新导数据；
  * 这里在出题侧注入，新题型随代码发布即可生效，且云端日后显式配置了
@@ -827,9 +868,9 @@ function buildQuestions(level) {
   for (let i = 0; i < level.count; i += 1) {
     plan.push(level.types[i % level.types.length]);
   }
-  // 古文关不用 lines，跳过注入；诗词关每关注入一题多空填字
+  // 诗词与古文关都注入一题多空填字，两版出题逻辑不同但共用四句挖空结构
   const isWen = level.genre === 'wen';
-  const ordered = shuffle(isWen ? plan : injectMultiFill(plan));
+  const ordered = shuffle(injectMultiFill(plan));
   const list = [];
 
   ordered.forEach(function (type, index) {
