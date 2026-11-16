@@ -70,9 +70,13 @@
 }
 
 /* ---- 学段筛选条 ---- */
+/* 外框锁死宽度并裁剪，防止 max-content 内容把整页撑宽 */
 .filter-wrap {
     position: relative;
+    box-sizing: border-box;
+    width: 100%;
     margin-top: 22rpx;
+    overflow: hidden;
 }
 /* 右侧渐隐：暗示筛选条还能往左滑，滑到底也不遮挡点击 */
 .filter-wrap::after {
@@ -86,14 +90,22 @@
     pointer-events: none;
 }
 
+/* 真正持有横向滚动的容器：真机靠 scroll-view 的 scroll-x，
+   内置预览器把 scroll-view 渲染成普通 view，这里用 overflow-x 兜底 */
 .filter-scroll {
+    box-sizing: border-box;
+    display: block;
     width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 
 .filter-row {
-    display: inline-flex;
-    /* 明确按内容撑宽，避免预览器把 inline-flex 压成容器宽度导致滑不动 */
+    display: flex;
+    flex-wrap: nowrap;
+    /* 内容按实际宽度撑开，超过 .filter-scroll 可视宽度时才产生横向滚动 */
     width: max-content;
     gap: 14rpx;
     padding: 4rpx 52rpx 4rpx 2rpx;
