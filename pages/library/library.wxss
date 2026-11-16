@@ -70,16 +70,33 @@
 }
 
 /* ---- 学段筛选条 ---- */
-.filter-scroll {
+.filter-wrap {
+    position: relative;
     margin-top: 22rpx;
+}
+/* 右侧渐隐：暗示筛选条还能往左滑，滑到底也不遮挡点击 */
+.filter-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 56rpx;
+    background: linear-gradient(to right, rgba(255, 250, 240, 0), #fffaf0);
+    pointer-events: none;
+}
+
+.filter-scroll {
     width: 100%;
     white-space: nowrap;
 }
 
 .filter-row {
     display: inline-flex;
+    /* 明确按内容撑宽，避免预览器把 inline-flex 压成容器宽度导致滑不动 */
+    width: max-content;
     gap: 14rpx;
-    padding: 4rpx 2rpx;
+    padding: 4rpx 52rpx 4rpx 2rpx;
 }
 
 .filter-chip {

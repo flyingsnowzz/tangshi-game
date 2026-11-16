@@ -32,18 +32,20 @@
         <view class="search-clear" wx:if="{{keyword}}" bindtap="onClearSearch">清空</view>
     </view>
 
-    <!-- 学段筛选 -->
-    <scroll-view class="filter-scroll" scroll-x="true" enhanced="true" show-scrollbar="false">
-        <view class="filter-row">
-            <view
-                class="filter-chip {{activeFilter === item.key ? 'filter-chip-on' : ''}}"
-                wx:for="{{filters}}"
-                wx:key="key"
-                data-key="{{item.key}}"
-                bindtap="onFilterTap"
-            >{{item.name}}</view>
-        </view>
-    </scroll-view>
+    <!-- 学段筛选：横向可滑，右侧渐隐提示后面还有选项 -->
+    <view class="filter-wrap">
+        <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
+            <view class="filter-row">
+                <view
+                    class="filter-chip {{activeFilter === item.key ? 'filter-chip-on' : ''}}"
+                    wx:for="{{filters}}"
+                    wx:key="key"
+                    data-key="{{item.key}}"
+                    bindtap="onFilterTap"
+                >{{item.name}}</view>
+            </view>
+        </scroll-view>
+    </view>
 
     <text class="lib-count">正在显示 {{shown}} 首</text>
 
