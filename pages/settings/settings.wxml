@@ -115,4 +115,9 @@
         <text class="about-title">关于这个游戏</text>
         <text class="about-text">按小学到初中的必背古诗文整理，分唐诗、宋词、古文三条线，由浅入深排成关卡；每篇都配了一张意象小画。答错不扣分，随时可以重来。</text>
     </view>
+
+    <view class="legal-link" bindtap="onOpenPrivacy">
+        <text class="legal-link-text">隐私政策</text>
+        <text class="legal-link-arrow">›</text>
+    </view>
 </view>

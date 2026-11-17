@@ -1,0 +1,94 @@
+.privacy {
+    padding-top: 32rpx;
+}
+
+.pp-head {
+    padding: 8rpx 4rpx 28rpx;
+}
+
+.pp-title {
+    display: block;
+    font-size: 44rpx;
+    font-weight: 800;
+    color: #2b3a35;
+    letter-spacing: 2rpx;
+}
+
+.pp-meta {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 23rpx;
+    color: #9aa39b;
+}
+
+.pp-intro {
+    display: block;
+    margin-top: 24rpx;
+    padding: 24rpx;
+    font-size: 26rpx;
+    line-height: 1.8;
+    color: #4d5c55;
+    background: #e2f5ef;
+    border: 3rpx solid #8fd3c4;
+    border-radius: 22rpx;
+}
+
+.pp-section {
+    margin-top: 36rpx;
+}
+
+.pp-h2 {
+    display: block;
+    margin-bottom: 16rpx;
+    padding-left: 18rpx;
+    font-size: 30rpx;
+    font-weight: 800;
+    color: #207a6e;
+    border-left: 8rpx solid #46b09e;
+    line-height: 1.4;
+}
+
+.pp-p {
+    display: block;
+    margin-top: 10rpx;
+    font-size: 26rpx;
+    line-height: 1.9;
+    color: #40504a;
+}
+
+.pp-contact {
+    padding: 28rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 24rpx;
+}
+
+.pp-email {
+    display: inline-block;
+    margin-top: 20rpx;
+    padding: 14rpx 28rpx;
+    font-size: 28rpx;
+    font-weight: 800;
+    color: #ffffff;
+    background: #2f9e8f;
+    border-radius: 30rpx;
+}
+
+.pp-copy-tip {
+    display: block;
+    margin-top: 12rpx;
+    font-size: 22rpx;
+    color: #9aa39b;
+}
+
+.pp-foot {
+    margin-top: 48rpx;
+    padding-top: 28rpx;
+    border-top: 2rpx solid #eee4ce;
+    text-align: center;
+}
+
+.pp-foot-line {
+    font-size: 22rpx;
+    color: #b0aa9c;
+}

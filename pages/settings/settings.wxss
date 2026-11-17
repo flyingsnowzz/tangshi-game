@@ -261,6 +261,30 @@
     line-height: 1.8;
 }
 
+/* 隐私政策入口 */
+.legal-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28rpx;
+    padding: 26rpx 30rpx;
+    background: #ffffff;
+    border: 3rpx solid #f0e5cd;
+    border-radius: 24rpx;
+}
+
+.legal-link-text {
+    font-size: 27rpx;
+    font-weight: 700;
+    color: #5a6b63;
+}
+
+.legal-link-arrow {
+    font-size: 36rpx;
+    line-height: 1;
+    color: #b9b0a0;
+}
+
 /* 声音设置状态卡：让开关的效果可见、可试听 */
 .sound-status {
     box-sizing: border-box;

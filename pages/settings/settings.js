@@ -81,4 +81,9 @@ createCloudPage({
     store.setSetting('fontSize', key);
     this.refresh();
   },
+
+  /** 隐私政策入口：提审必需的用户可访问入口 */
+  onOpenPrivacy: function () {
+    wx.navigateTo({ url: '/pages/privacy/privacy' });
+  },
 });

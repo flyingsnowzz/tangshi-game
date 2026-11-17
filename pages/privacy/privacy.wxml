@@ -1,0 +1,51 @@
+<view class="page-shell privacy">
+
+    <view class="pp-head">
+        <text class="pp-title">隐私政策</text>
+        <text class="pp-meta">更新时间：{{updateDate}}</text>
+        <text class="pp-intro">本政策说明「古诗文闯关」如何收集、使用和保护你的信息。我们坚持游客即可游玩，尽量少收集。</text>
+    </view>
+
+    <view class="pp-section">
+        <text class="pp-h2">一、我们不收集的信息</text>
+        <text class="pp-p">你无需注册、无需授权微信头像昵称、无需提供手机号，即可浏览诗库、闯关答题。我们不收集你的微信昵称、头像、性别、地理位置、通讯录、相册或手机通讯记录。</text>
+    </view>
+
+    <view class="pp-section">
+        <text class="pp-h2">二、我们收集的信息</text>
+        <text class="pp-p">1. 本机进度：通关星数、积分、收藏、答题错题与个性化设置（音效、背景音乐、字号）保存在你的设备本地，用于断点续玩。</text>
+        <text class="pp-p">2. 邮箱与验证码：仅当你主动选择「保存成绩到云端」时，我们会让你填写邮箱并获取验证码，用于创建账号和跨设备同步成绩。不填则不影响游玩。</text>
+        <text class="pp-p">3. 云端同步数据：登录后的通关记录、积分、收藏、错题，存储于腾讯云服务，用于跨设备恢复你的进度。</text>
+    </view>
+
+    <view class="pp-section">
+        <text class="pp-h2">三、信息的使用方式</text>
+        <text class="pp-p">上述信息仅用于：保存和同步你的学习进度、在你主动退出登录时清除本地会话、以及在你反馈问题时定位故障。我们不会将你的信息用于广告推送，不会出售或出租给第三方。</text>
+    </view>
+
+    <view class="pp-section">
+        <text class="pp-h2">四、第三方服务</text>
+        <text class="pp-p">本小程序的题库内容读取、账号会话与成绩云同步，由腾讯云服务提供支持；邮箱验证码由邮件服务发送。这些服务仅在我们必要的功能范围内被调用，不会获取你的通讯录或位置信息。</text>
+    </view>
+
+    <view class="pp-section">
+        <text class="pp-h2">五、你的权利</text>
+        <text class="pp-p">你可以随时在「设置」中退出登录、关闭背景音乐与音效、调整字号。如需删除云端账号及全部同步数据，请通过下方邮箱联系我们，我们将在核实后处理。</text>
+    </view>
+
+    <view class="pp-section">
+        <text class="pp-h2">六、政策更新</text>
+        <text class="pp-p">如功能调整导致信息处理方式变化，我们会更新本政策并修改顶部「更新时间」。重大变更会在小程序内提示。</text>
+    </view>
+
+    <view class="pp-section pp-contact">
+        <text class="pp-h2">七、联系我们</text>
+        <text class="pp-p">对本政策有疑问，或需要删除账号数据，请联系：</text>
+        <view class="pp-email" bindtap="onCopyEmail">{{contactEmail}}</view>
+        <text class="pp-copy-tip">点按可复制邮箱地址</text>
+    </view>
+
+    <view class="pp-foot">
+        <text class="pp-foot-line">古诗文闯关 · 让背诵更轻松一点</text>
+    </view>
+</view>
