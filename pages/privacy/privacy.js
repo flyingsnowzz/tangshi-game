@@ -1,14 +1,12 @@
 /**
  * 隐私政策页。
  *
- * 【上架前必改】contactEmail 是占位值，必须替换成真实可联系邮箱后再提审，
- * 否则审核会以「隐私政策缺少有效联系方式」驳回。
+ * 联系邮箱用于隐私政策中的数据删除请求与政策咨询。
  */
 Page({
   data: {
     updateDate: '2026年11月17日',
-    // TODO(上架前必改)：换成真实邮箱，如 support@你的域名.com
-    contactEmail: '请替换成真实邮箱',
+    contactEmail: 'zhanglei@doxue.com',
   },
 
   onCopyEmail: function () {
